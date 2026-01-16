@@ -1,3 +1,39 @@
 <resources>
     <string name="app_name">Cheffy</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="next">Next</string>
+    <string name="onboarding_1_title_part1">Plan Your</string>
+    <string name="onboarding_1_title_part2">Weekly Meals</string>
+    <string name="onboarding_1_description">Organize your cooking schedule\nand save your daily time.</string>
+    <string name="onboarding_2_title_part1">Discover</string>
+    <string name="onboarding_2_title_part2">Global Cuisines</string>
+    <string name="onboarding_2_description">Find recipes by ingredients\nand explore new tastes.</string>
+    <string name="onboarding_3_title_part1">Your Favorites,</string>
+    <string name="onboarding_3_title_part2">Anytime</string>
+    <string name="onboarding_3_description">Access your recipes offline\nand sync across devices.</string>
+    <string name="background_image">Background Image</string>
+    <string name="login">Login</string>
+    <string name="create_account">Create Account</string>
+    <string name="or">Or</string>
+    <string name="continue_as_a_guest">Continue as a Guest</string>
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="login_description">Your meal plan is ready when you are</string>
+    <string name="email">Email *</string>
+    <string name="email_hint">username111@gmail.com</string>
+    <string name="password">Password *</string>
+    <string name="password_hint">******</string>
+    <string name="forget_your_password">Forget Your Password?</string>
+    <string name="new_here">New here?</string>
+    <string name="signup_description">Discover recipes from around the world</string>
+    <string name="full_name">Full Name *</string>
+    <string name="full_name_hint">Omar Khaled</string>
+    <string name="confirm_password">Confirm Password *</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="forgot_password_description">Don\'t worry! It happens. Please enter the email address associated with your account.</string>
+    <string name="email_address">Email Address</string>
+    <string name="send_code">Send Code</string>
+    <string name="remember_password">Remember Password?</string>
 </resources>
