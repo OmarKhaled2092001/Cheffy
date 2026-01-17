@@ -36,4 +36,17 @@
     <string name="email_address">Email Address</string>
     <string name="send_code">Send Code</string>
     <string name="remember_password">Remember Password?</string>
+    <string name="hello">Hello,</string>
+    <string name="user_name">Chef!</string>
+    <string name="home_description">What do you want to cook today?</string>
+    <string name="plan_section_title">Your Plan for Today</string>
+    <string name="background_image_for_today_s_meal">Background image for today\'s meal</string>
+    <string name="check_your_plan"><![CDATA[Check your plan >]]></string>
+    <string name="daily_inspiration_section">Daily Inspiration</string>
+    <string name="background_image_for_daily_inspiration_s_meal">Background Image for Daily Inspiration\'s Meal</string>
+    <string name="meal_of_the_day">Meal of the Day</string>
+    <string name="categories">Categories</string>
+    <string name="popular_recipes">Popular Recipes</string>
+    <string name="see_all">See All</string>
+    <string name="explore_cuisines">Explore Cuisines</string>
 </resources>
