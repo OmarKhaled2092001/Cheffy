@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:focusableInTouchMode="true">
+
+    <EditText
+        android:id="@+id/etSearch"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/search_bar_bg"
+        android:drawableStart="@drawable/search"
+        android:drawableTint="@color/text_gray"
+        android:drawablePadding="12dp"
+        android:hint="@string/search_bar_hint"
+        android:paddingHorizontal="16dp"
+        android:inputType="text"
+        android:maxLines="1"
+        android:textColor="@color/black"
+        android:textColorHint="@color/text_gray"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <HorizontalScrollView
+        android:id="@+id/scrollChips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:scrollbars="none"
+        android:paddingHorizontal="20dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/etSearch">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleSelection="true"
+            app:selectionRequired="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipMeal"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/meal_name"
+                android:checked="true"
+                android:textColor="@color/black"
+                app:chipBackgroundColor="@color/chip_state_list_bg"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCategory"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/category"
+                android:textColor="@color/black"
+                app:chipBackgroundColor="@color/chip_state_list_bg"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCountry"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/country"
+                android:textColor="@color/black"
+                app:chipBackgroundColor="@color/chip_state_list_bg"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipIngredient"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ingredient"
+                android:textColor="@color/black"
+                app:chipBackgroundColor="@color/chip_state_list_bg"/>
+
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSearchResults"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:paddingHorizontal="16dp"
+        android:clipToPadding="false"
+        android:visibility="visible"
+        tools:visibility="visible"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scrollChips"
+        tools:listitem="@layout/item_meal_grid"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFullCategories"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:paddingHorizontal="16dp"
+        android:clipToPadding="false"
+        android:visibility="gone"
+        tools:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scrollChips"
+        tools:listitem="@layout/item_category_grid"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFullCountries"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:paddingHorizontal="16dp"
+        android:clipToPadding="false"
+        android:visibility="gone"
+        tools:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scrollChips"
+        tools:listitem="@layout/item_circle_grid"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFullIngredients"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:paddingHorizontal="16dp"
+        android:clipToPadding="false"
+        android:visibility="gone"
+        tools:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scrollChips"
+        tools:listitem="@layout/item_circle_grid"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
