@@ -49,4 +49,10 @@
     <string name="popular_recipes">Popular Recipes</string>
     <string name="see_all">See All</string>
     <string name="explore_cuisines">Explore Cuisines</string>
+    <string name="search_bar_hint">Search for recipes...</string>
+    <string name="meal_name">Meal Name</string>
+    <string name="category">Category</string>
+    <string name="country">Country</string>
+    <string name="ingredient">Ingredient</string>
+    <string name="explore_ingredients">Explore Ingredients</string>
 </resources>
