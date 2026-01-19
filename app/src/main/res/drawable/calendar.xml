@@ -1,56 +1,18 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
-  <path
-      android:pathData="M21,2H3C2.448,2 2,2.448 2,3V21C2,21.552 2.448,22 3,22H21C21.552,22 22,21.552 22,21V3C22,2.448 21.552,2 21,2Z"
-      android:strokeLineJoin="round"
-      android:strokeWidth="2"
-      android:fillColor="#00000000"
-      android:strokeColor="#333333"
-      android:strokeLineCap="round"/>
-  <path
-      android:pathData="M2,7H22"
-      android:strokeLineJoin="round"
-      android:strokeWidth="2"
-      android:fillColor="#00000000"
-      android:strokeColor="#333333"
-      android:strokeLineCap="round"/>
-  <path
-      android:pathData="M2,5.5V11.5"
-      android:strokeLineJoin="round"
-      android:strokeWidth="2"
-      android:fillColor="#00000000"
-      android:strokeColor="#333333"
-      android:strokeLineCap="round"/>
-  <path
-      android:pathData="M22,5.5V11.5"
-      android:strokeLineJoin="round"
-      android:strokeWidth="2"
-      android:fillColor="#00000000"
-      android:strokeColor="#333333"
-      android:strokeLineCap="round"/>
-  <path
-      android:pathData="M14,11V18H18V11H14Z"
-      android:strokeLineJoin="round"
-      android:strokeWidth="2"
-      android:fillColor="#00000000"
-      android:fillType="evenOdd"
-      android:strokeColor="#333333"
-      android:strokeLineCap="round"/>
-  <path
-      android:pathData="M6,11H10V18H6"
-      android:strokeLineJoin="round"
-      android:strokeWidth="2"
-      android:fillColor="#00000000"
-      android:strokeColor="#333333"
-      android:strokeLineCap="round"/>
-  <path
-      android:pathData="M10,14.5H7"
-      android:strokeLineJoin="round"
-      android:strokeWidth="2"
-      android:fillColor="#00000000"
-      android:strokeColor="#333333"
-      android:strokeLineCap="round"/>
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+
+    <group
+        android:pivotX="480"
+        android:pivotY="480"
+        android:scaleX="1.35"
+        android:scaleY="1.35">
+
+        <path
+            android:pathData="M180,840q-24,0 -42,-18t-18,-42v-620q0,-24 18,-42t42,-18h65v-60h65v60h340v-60h65v60h65q24,0 42,18t18,42v620q0,24 -18,42t-42,18L180,840ZM780,780v-620L180,160v620h600ZM365,680h50v-160q28.17,-6.86 46.58,-27.93Q480,471 480,443.31L480,280h-40v151h-30v-151h-40v151h-30v-151h-40v163q0,28 18.42,49.07Q336.83,513.14 365,520v160ZM610,680h50v-400q-50,0 -80,30t-30,80v130h60v160ZM180,780v-620,620Z"
+            android:fillColor="#e3e3e3"/>
+
+    </group>
 </vector>
