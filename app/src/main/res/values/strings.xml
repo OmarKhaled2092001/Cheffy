@@ -55,4 +55,26 @@
     <string name="country">Country</string>
     <string name="ingredient">Ingredient</string>
     <string name="explore_ingredients">Explore Ingredients</string>
+    <string name="my_cookbook">My Cookbook</string>
+    <string name="search_button_icon">Search Button Icon</string>
+    <string name="all">All</string>
+    <string name="food">Food</string>
+    <string name="desserts">Desserts</string>
+    <string name="logout">Logout</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="favorites">Favorites</string>
+    <string name="plan">Plan</string>
+    <string name="profile">Profile</string>
+    <string name="planned">Planned</string>
+    <string name="data_sync"><![CDATA[Data & Sync]]></string>
+    <string name="general">General</string>
+    <string name="weekly_plan">Weekly Plan</string>
+    <string name="weekly_plan_description">Manage your meals for the week</string>
+    <string name="no_meals_planned">No Meals Planned</string>
+    <string name="add_meal">Add Meal</string>
+    <string name="meal_details_description">Discover the taste of this amazing meal with our step-by-step guide.</string>
+    <string name="instructions">Instructions</string>
+    <string name="favorite_button">Favorite Button</string>
+    <string name="add_to_plan">Add to Plan</string>
 </resources>
