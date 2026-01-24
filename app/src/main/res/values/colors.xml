@@ -7,6 +7,9 @@
     <color name="text_gray">#666666</color>
     <color name="light_gray">#F5F5F5</color>
     <color name="red">#FF5252</color>
+    <color name="snack_success_bg">#2E7D32</color>
+    <color name="snack_error_bg">#C62828</color>
+    <color name="snack_text_color">#FFFFFF</color>
 
 
 </resources>

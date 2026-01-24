@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:focusableInTouchMode="true"
-    tools:context=".FavoritesFragment">
+    tools:context=".ui.FavoritesFragment">
 
     <TextView
         android:id="@+id/tvTitle"
