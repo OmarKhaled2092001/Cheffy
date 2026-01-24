@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:id="@+id/main"
-    tools:context=".MealDetailsFragment">
+    tools:context=".ui.MealDetailsFragment">
 
     <LinearLayout
         android:id="@+id/headerLayout"

@@ -23,7 +23,7 @@
     <string name="email_hint">username111@gmail.com</string>
     <string name="password">Password *</string>
     <string name="password_hint">******</string>
-    <string name="forget_your_password">Forget Your Password?</string>
+    <string name="forget_your_password">Forgot Your Password?</string>
     <string name="new_here">New here?</string>
     <string name="signup_description">Discover recipes from around the world</string>
     <string name="full_name">Full Name *</string>
@@ -77,4 +77,7 @@
     <string name="instructions">Instructions</string>
     <string name="favorite_button">Favorite Button</string>
     <string name="add_to_plan">Add to Plan</string>
+    <string name="facebook_login_button">Facebook Login Button</string>
+    <string name="google_login_button">Google Login Button</string>
+    <string name="twitter_login_button">Twitter Login Button</string>
 </resources>
