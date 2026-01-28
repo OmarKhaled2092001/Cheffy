@@ -9,8 +9,7 @@ public class ForgotPasswordPresenter implements ForgotPasswordContract.Presenter
     private ForgotPasswordContract.View view;
     private final IAuthRepository authRepository;
 
-    public ForgotPasswordPresenter(ForgotPasswordContract.View view, IAuthRepository authRepository) {
-        this.view = view;
+    public ForgotPasswordPresenter(IAuthRepository authRepository) {
         this.authRepository = authRepository;
     }
 

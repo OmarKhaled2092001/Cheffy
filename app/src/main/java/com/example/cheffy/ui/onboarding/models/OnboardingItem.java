@@ -1,4 +1,4 @@
-package com.example.cheffy.data.onboarding.models;
+package com.example.cheffy.ui.onboarding.models;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;

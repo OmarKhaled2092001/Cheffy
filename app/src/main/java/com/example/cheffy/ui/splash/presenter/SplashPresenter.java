@@ -11,10 +11,14 @@ public class SplashPresenter implements SplashContract.Presenter {
     private final AppPreferences appPreferences;
     private final IAuthRepository authRepository;
 
-    public SplashPresenter(SplashContract.View view, AppPreferences appPreferences, IAuthRepository authRepository) {
-        this.view = view;
+    public SplashPresenter(AppPreferences appPreferences, IAuthRepository authRepository) {
         this.appPreferences = appPreferences;
         this.authRepository = authRepository;
+    }
+
+    @Override
+    public void attachView(SplashContract.View view) {
+        this.view = view;
     }
 
     @Override

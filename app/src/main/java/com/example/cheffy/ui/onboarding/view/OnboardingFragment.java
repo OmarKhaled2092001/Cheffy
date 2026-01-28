@@ -16,7 +16,7 @@ import android.widget.ImageButton;
 import com.example.cheffy.R;
 import com.example.cheffy.data.local.AppPreferences;
 import com.example.cheffy.ui.onboarding.presenter.OnboardingContract;
-import com.example.cheffy.data.onboarding.models.OnboardingItem;
+import com.example.cheffy.ui.onboarding.models.OnboardingItem;
 import com.example.cheffy.ui.onboarding.presenter.OnboardingPresenter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -35,7 +35,7 @@ public class OnboardingFragment extends Fragment implements OnboardingContract.V
         super.onCreate(savedInstanceState);
 
         AppPreferences appPreferences = new AppPreferences(requireContext());
-        presenter = new OnboardingPresenter(this, appPreferences);
+        presenter = new OnboardingPresenter(appPreferences);
     }
 
     @Override

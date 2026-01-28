@@ -10,8 +10,7 @@ public class SignupPresenter implements SignupContract.Presenter {
     private SignupContract.View view;
     private final IAuthRepository authRepository;
 
-    public SignupPresenter(SignupContract.View view, IAuthRepository authRepository) {
-        this.view = view;
+    public SignupPresenter(IAuthRepository authRepository) {
         this.authRepository = authRepository;
     }
 

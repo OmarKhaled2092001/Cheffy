@@ -10,8 +10,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     private LoginContract.View view;
     private final IAuthRepository authRepository;
 
-    public LoginPresenter(LoginContract.View view, IAuthRepository authRepository) {
-        this.view = view;
+    public LoginPresenter(IAuthRepository authRepository) {
         this.authRepository = authRepository;
     }
 

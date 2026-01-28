@@ -34,7 +34,7 @@ public class ForgotPasswordFragment extends BaseFragment implements ForgotPasswo
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new ForgotPasswordPresenter(this, new AuthRepositoryImpl());
+        presenter = new ForgotPasswordPresenter(AuthRepositoryImpl.getInstance());
     }
 
     @Override

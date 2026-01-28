@@ -23,7 +23,7 @@ public class WelcomeFragment extends Fragment implements WelcomeContract.View {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new WelcomePresenter(this);
+        presenter = new WelcomePresenter();
     }
 
     @Override
