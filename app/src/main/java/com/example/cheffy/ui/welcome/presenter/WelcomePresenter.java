@@ -3,10 +3,6 @@ package com.example.cheffy.ui.welcome.presenter;
 public class WelcomePresenter implements WelcomeContract.Presenter {
     private WelcomeContract.View view;
 
-    public WelcomePresenter(WelcomeContract.View view) {
-        this.view = view;
-    }
-
     @Override
     public void attachView(WelcomeContract.View view) {
         this.view = view;

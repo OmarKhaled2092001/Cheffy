@@ -7,7 +7,7 @@
     android:layout_marginEnd="16dp">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imgCountry"
+        android:id="@+id/imgItem"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:scaleType="centerCrop"
@@ -21,16 +21,16 @@
         tools:src="@drawable/welcome_background" />
 
     <TextView
-        android:id="@+id/tvCountryName"
+        android:id="@+id/tvItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textColor="@color/black"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@id/imgCountry"
-        app:layout_constraintStart_toStartOf="@id/imgCountry"
-        app:layout_constraintTop_toBottomOf="@id/imgCountry"
+        app:layout_constraintEnd_toEndOf="@id/imgItem"
+        app:layout_constraintStart_toStartOf="@id/imgItem"
+        app:layout_constraintTop_toBottomOf="@id/imgItem"
         tools:text="Italian" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

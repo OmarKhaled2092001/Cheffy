@@ -25,7 +25,7 @@ public class SplashFragment extends Fragment implements SplashContract.View {
         super.onCreate(savedInstanceState);
 
         AppPreferences appPreferences = new AppPreferences(requireContext());
-        presenter = new SplashPresenter(this, appPreferences, new AuthRepositoryImpl());
+        presenter = new SplashPresenter(appPreferences, AuthRepositoryImpl.getInstance());
     }
 
     @Override
@@ -38,6 +38,7 @@ public class SplashFragment extends Fragment implements SplashContract.View {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        presenter.attachView(this);
         presenter.decideNextScreen();
     }
 

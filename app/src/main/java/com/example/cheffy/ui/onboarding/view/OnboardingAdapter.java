@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cheffy.R;
-import com.example.cheffy.data.onboarding.models.OnboardingItem;
+import com.example.cheffy.ui.onboarding.models.OnboardingItem;
 
 import java.util.List;
 

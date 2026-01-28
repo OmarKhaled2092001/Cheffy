@@ -9,6 +9,7 @@ public interface SplashContract {
     }
 
     interface Presenter {
+        void attachView(View view);
         void decideNextScreen();
         void detachView();
     }

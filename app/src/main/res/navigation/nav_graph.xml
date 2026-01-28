@@ -90,9 +90,37 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.cheffy.ui.HomeFragment"
+        android:name="com.example.cheffy.ui.home.view.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_mealDetailsFragment"
+            app:destination="@id/mealDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_mealsListFragment"
+            app:destination="@id/mealsListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mealDetailsFragment"
+        android:name="com.example.cheffy.ui.MealDetailsFragment"
+        android:label="fragment_meal_details"
+        tools:layout="@layout/fragment_meal_details">
+        <argument
+            android:name="meal"
+            app:argType="com.example.cheffy.data.meals.models.RemoteMeal" />
+    </fragment>
+    <fragment
+        android:id="@+id/mealsListFragment"
+        android:name="com.example.cheffy.ui.MealsListFragment"
+        android:label="fragment_meals_list"
+        tools:layout="@layout/fragment_meals_list">
+        <argument
+            android:name="filter"
+            app:argType="string" />
+        <argument
+            android:name="type"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/forgotPasswordFragment"
         android:name="com.example.cheffy.ui.forgotpassword.view.ForgotPasswordFragment"

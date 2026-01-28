@@ -31,7 +31,7 @@ public class SignupFragment extends BaseFragment implements SignupContract.View 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new SignupPresenter(this, new AuthRepositoryImpl());
+        presenter = new SignupPresenter(AuthRepositoryImpl.getInstance());
     }
 
     @Override

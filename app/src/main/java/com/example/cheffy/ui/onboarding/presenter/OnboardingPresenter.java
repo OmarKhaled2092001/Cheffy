@@ -2,8 +2,7 @@ package com.example.cheffy.ui.onboarding.presenter;
 
 import com.example.cheffy.R;
 import com.example.cheffy.data.local.AppPreferences;
-import com.example.cheffy.data.onboarding.models.OnboardingItem;
-import com.example.cheffy.ui.welcome.presenter.WelcomeContract;
+import com.example.cheffy.ui.onboarding.models.OnboardingItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +12,7 @@ public class OnboardingPresenter implements OnboardingContract.Presenter {
     private OnboardingContract.View view;
     private final AppPreferences appPreferences;
 
-    public OnboardingPresenter(OnboardingContract.View view, AppPreferences appPreferences) {
-        this.view = view;
+    public OnboardingPresenter(AppPreferences appPreferences) {
         this.appPreferences = appPreferences;
     }
 

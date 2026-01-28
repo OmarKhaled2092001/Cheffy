@@ -56,7 +56,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        presenter = new LoginPresenter(this, new AuthRepositoryImpl());
+        presenter = new LoginPresenter(AuthRepositoryImpl.getInstance());
         googleAuthHelper = new GoogleAuthHelper(requireContext(), socialAuthCallback);
     }
 

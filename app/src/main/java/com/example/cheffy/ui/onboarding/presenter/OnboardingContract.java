@@ -1,7 +1,6 @@
 package com.example.cheffy.ui.onboarding.presenter;
 
-import com.example.cheffy.data.onboarding.models.OnboardingItem;
-import com.example.cheffy.ui.welcome.presenter.WelcomeContract;
+import com.example.cheffy.ui.onboarding.models.OnboardingItem;
 
 import java.util.List;
 
