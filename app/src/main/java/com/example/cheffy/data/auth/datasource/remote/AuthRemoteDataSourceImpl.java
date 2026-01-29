@@ -1,12 +1,14 @@
 package com.example.cheffy.data.auth.datasource.remote;
 
 import com.example.cheffy.data.auth.models.User;
-import com.example.cheffy.data.auth.repository.AuthResultCallback;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
+
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Single;
 
 public class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
 
@@ -25,36 +27,44 @@ public class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
     }
 
     @Override
-    public void login(String email, String password, AuthResultCallback callback) {
-        firebaseAuth.signInWithEmailAndPassword(email, password)
+    public Single<User> login(String email, String password) {
+        return Single.create(emitter -> 
+            firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener(authResult -> {
                     FirebaseUser firebaseUser = authResult.getUser();
                     User user = mapFirebaseUserToUser(firebaseUser);
-                    callback.onSuccess(user);
+                    if (user != null) {
+                        emitter.onSuccess(user);
+                    } else {
+                        emitter.onError(new RuntimeException("Login failed: User is null"));
+                    }
                 })
-                .addOnFailureListener(e -> {
-                    callback.onError(e.getMessage());
-                });
+                .addOnFailureListener(emitter::onError)
+        );
     }
 
     @Override
-    public void loginWithGoogle(String idToken, AuthResultCallback callback) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-
-        firebaseAuth.signInWithCredential(credential)
+    public Single<User> loginWithGoogle(String idToken) {
+        return Single.create(emitter -> {
+            AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+            firebaseAuth.signInWithCredential(credential)
                 .addOnSuccessListener(authResult -> {
                     FirebaseUser firebaseUser = authResult.getUser();
                     User user = mapFirebaseUserToUser(firebaseUser);
-                    callback.onSuccess(user);
+                    if (user != null) {
+                        emitter.onSuccess(user);
+                    } else {
+                        emitter.onError(new RuntimeException("Google Sign-In failed: User is null"));
+                    }
                 })
-                .addOnFailureListener(e -> {
-                    callback.onError(e.getMessage());
-                });
+                .addOnFailureListener(emitter::onError);
+        });
     }
 
     @Override
-    public void register(String email, String password, String displayName, AuthResultCallback callback) {
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
+    public Single<User> register(String email, String password, String displayName) {
+        return Single.create(emitter -> 
+            firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
@@ -64,32 +74,39 @@ public class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
 
                             firebaseUser.updateProfile(profileUpdates).addOnCompleteListener(updateTask -> {
                                 if (updateTask.isSuccessful()) {
-                                    callback.onSuccess(new User(displayName, email));
+                                    emitter.onSuccess(new User(displayName, email));
                                 } else {
-                                    callback.onError("User registered, but failed to save name.");
+                                    emitter.onError(new RuntimeException("User registered, but failed to save name."));
                                 }
                             });
                         } else {
-                            callback.onError("Registration failed: User is null");
+                            emitter.onError(new RuntimeException("Registration failed: User is null"));
                         }
                     } else {
-                        String errorMsg = task.getException() != null ? task.getException().getMessage() : "Registration failed";
-                        callback.onError(errorMsg);
+                        String errorMsg = task.getException() != null 
+                            ? task.getException().getMessage() 
+                            : "Registration failed";
+                        emitter.onError(new RuntimeException(errorMsg));
                     }
-                });
+                })
+        );
     }
 
     @Override
-    public void sendPasswordResetEmail(String email, AuthResultCallback callback) {
-        firebaseAuth.sendPasswordResetEmail(email)
+    public Completable sendPasswordResetEmail(String email) {
+        return Completable.create(emitter -> 
+            firebaseAuth.sendPasswordResetEmail(email)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        callback.onSuccess(null);
+                        emitter.onComplete();
                     } else {
-                        String errorMsg = task.getException() != null ? task.getException().getMessage() : "Failed to send reset email";
-                        callback.onError(errorMsg);
+                        String errorMsg = task.getException() != null 
+                            ? task.getException().getMessage() 
+                            : "Failed to send reset email";
+                        emitter.onError(new RuntimeException(errorMsg));
                     }
-                });
+                })
+        );
     }
 
     @Override

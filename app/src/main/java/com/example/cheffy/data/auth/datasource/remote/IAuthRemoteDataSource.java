@@ -1,16 +1,18 @@
 package com.example.cheffy.data.auth.datasource.remote;
 
 import com.example.cheffy.data.auth.models.User;
-import com.example.cheffy.data.auth.repository.AuthResultCallback;
+
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Single;
 
 public interface IAuthRemoteDataSource {
-    void login(String email, String password, AuthResultCallback callback);
+    Single<User> login(String email, String password);
 
-    void loginWithGoogle(String idToken, AuthResultCallback callback);
+    Single<User> loginWithGoogle(String idToken);
 
-    void register(String email, String password, String displayName, AuthResultCallback callback);
+    Single<User> register(String email, String password, String displayName);
 
-    void sendPasswordResetEmail(String email, AuthResultCallback callback);
+    Completable sendPasswordResetEmail(String email);
 
     boolean isUserLoggedIn();
 

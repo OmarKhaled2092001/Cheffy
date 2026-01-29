@@ -1,15 +1,16 @@
 package com.example.cheffy.ui.mealdetails.presenter;
 
+import com.example.cheffy.common.base.BasePresenter;
 import com.example.cheffy.data.meals.models.RemoteMeal;
 import com.example.cheffy.data.meals.repository.IMealsRepository;
-import com.example.cheffy.data.meals.repository.MealsDataCallback;
 import com.example.cheffy.ui.mealdetails.model.IngredientItem;
 
 import java.util.List;
 
-public class MealDetailsPresenter implements MealDetailsContract.Presenter {
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 
-    private MealDetailsContract.View view;
+public class MealDetailsPresenter extends BasePresenter<MealDetailsContract.View> implements MealDetailsContract.Presenter {
+
     private final IMealsRepository mealsRepository;
 
     public MealDetailsPresenter(IMealsRepository mealsRepository) {
@@ -18,17 +19,17 @@ public class MealDetailsPresenter implements MealDetailsContract.Presenter {
 
     @Override
     public void attachView(MealDetailsContract.View view) {
-        this.view = view;
+        super.attachView(view);
     }
 
     @Override
     public void detachView() {
-        this.view = null;
+        super.detachView();
     }
 
     @Override
     public void loadMealDetails(RemoteMeal meal) {
-        if (view == null) return;
+        if (!isViewAttached()) return;
 
         if (meal == null) {
             view.showError("Unable to load meal details");
@@ -47,25 +48,30 @@ public class MealDetailsPresenter implements MealDetailsContract.Presenter {
     }
 
     private void fetchFullMealDetails(String mealId) {
-        if (view == null) return;
+        if (!isViewAttached()) return;
 
-        mealsRepository.getMealById(mealId, new MealsDataCallback<RemoteMeal>() {
-            @Override
-            public void onSuccess(RemoteMeal fullMeal) {
-                if (view == null) return;
-                displayMealDetails(fullMeal);
-            }
-
-            @Override
-            public void onError(String message) {
-                if (view == null) return;
-                view.showError(message != null ? message : "Failed to load meal details");
-            }
-        });
+        addDisposable(
+            mealsRepository.getMealById(mealId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    fullMeal -> {
+                        if (isViewAttached()) {
+                            displayMealDetails(fullMeal);
+                        }
+                    },
+                    throwable -> {
+                        if (isViewAttached()) {
+                            view.showError(throwable.getMessage() != null 
+                                ? throwable.getMessage() 
+                                : "Failed to load meal details");
+                        }
+                    }
+                )
+        );
     }
 
     private void displayMealDetails(RemoteMeal meal) {
-        if (view == null) return;
+        if (!isViewAttached()) return;
 
         try {
             List<IngredientItem> ingredientsList = meal.getIngredientsList();
@@ -79,7 +85,7 @@ public class MealDetailsPresenter implements MealDetailsContract.Presenter {
 
     @Override
     public void onAddToFavoritesClicked() {
-        if (view == null) return;
+        if (!isViewAttached()) return;
         view.showAddToFavoritesMessage();
     }
 }

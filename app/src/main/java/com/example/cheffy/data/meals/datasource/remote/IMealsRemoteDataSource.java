@@ -5,22 +5,23 @@ import com.example.cheffy.data.meals.models.Category;
 import com.example.cheffy.data.meals.models.Ingredient;
 import com.example.cheffy.data.meals.models.RemoteMeal;
 import com.example.cheffy.data.meals.models.SearchType;
-import com.example.cheffy.data.meals.repository.MealsDataCallback;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Single;
+
 public interface IMealsRemoteDataSource {
-    void getRandomMeal(MealsDataCallback<RemoteMeal> callback);
+    Single<RemoteMeal> getRandomMeal();
 
-    void getCategories(MealsDataCallback<List<Category>> callback);
+    Single<List<Category>> getCategories();
 
-    void getAreas(MealsDataCallback<List<Area>> callback);
+    Single<List<Area>> getAreas();
 
-    void getIngredients(MealsDataCallback<List<Ingredient>> callback);
+    Single<List<Ingredient>> getIngredients();
 
-    void getPopularMeals(int count, MealsDataCallback<List<RemoteMeal>> callback);
+    Single<List<RemoteMeal>> getPopularMeals(int count);
 
-    void getMealsByFilter(SearchType type, String filter, MealsDataCallback<List<RemoteMeal>> callback);
+    Single<List<RemoteMeal>> getMealsByFilter(SearchType type, String filter);
 
-    void getMealById(String mealId, MealsDataCallback<RemoteMeal> callback);
+    Single<RemoteMeal> getMealById(String mealId);
 }

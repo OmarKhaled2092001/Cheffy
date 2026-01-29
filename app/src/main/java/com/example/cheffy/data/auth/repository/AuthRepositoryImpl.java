@@ -4,6 +4,10 @@ import com.example.cheffy.data.auth.datasource.remote.AuthRemoteDataSourceImpl;
 import com.example.cheffy.data.auth.datasource.remote.IAuthRemoteDataSource;
 import com.example.cheffy.data.auth.models.User;
 
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class AuthRepositoryImpl implements IAuthRepository {
     private final IAuthRemoteDataSource remoteDataSource;
     private static AuthRepositoryImpl instance;
@@ -20,23 +24,27 @@ public class AuthRepositoryImpl implements IAuthRepository {
     }
 
     @Override
-    public void login(String email, String password, AuthResultCallback callback) {
-        remoteDataSource.login(email, password, callback);
+    public Single<User> login(String email, String password) {
+        return remoteDataSource.login(email, password)
+                .subscribeOn(Schedulers.io());
     }
 
     @Override
-    public void loginWithGoogle(String idToken, AuthResultCallback callback) {
-        remoteDataSource.loginWithGoogle(idToken, callback);
+    public Single<User> loginWithGoogle(String idToken) {
+        return remoteDataSource.loginWithGoogle(idToken)
+                .subscribeOn(Schedulers.io());
     }
 
     @Override
-    public void register(String email, String password, String displayName, AuthResultCallback callback) {
-        remoteDataSource.register(email, password, displayName, callback);
+    public Single<User> register(String email, String password, String displayName) {
+        return remoteDataSource.register(email, password, displayName)
+                .subscribeOn(Schedulers.io());
     }
 
     @Override
-    public void sendPasswordResetEmail(String email, AuthResultCallback callback) {
-        remoteDataSource.sendPasswordResetEmail(email, callback);
+    public Completable sendPasswordResetEmail(String email) {
+        return remoteDataSource.sendPasswordResetEmail(email)
+                .subscribeOn(Schedulers.io());
     }
 
     @Override

@@ -10,6 +10,9 @@ import com.example.cheffy.data.meals.models.SearchType;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class MealsRepositoryImpl implements IMealsRepository {
 
     private final IMealsRemoteDataSource remoteDataSource;
@@ -27,37 +30,44 @@ public class MealsRepositoryImpl implements IMealsRepository {
     }
 
     @Override
-    public void getRandomMeal(MealsDataCallback<RemoteMeal> callback) {
-        remoteDataSource.getRandomMeal(callback);
+    public Single<RemoteMeal> getRandomMeal() {
+        return remoteDataSource.getRandomMeal()
+                .subscribeOn(Schedulers.io());
     }
 
     @Override
-    public void getCategories(MealsDataCallback<List<Category>> callback) {
-        remoteDataSource.getCategories(callback);
+    public Single<List<Category>> getCategories() {
+        return remoteDataSource.getCategories()
+                .subscribeOn(Schedulers.io());
     }
 
     @Override
-    public void getAreas(MealsDataCallback<List<Area>> callback) {
-        remoteDataSource.getAreas(callback);
+    public Single<List<Area>> getAreas() {
+        return remoteDataSource.getAreas()
+                .subscribeOn(Schedulers.io());
     }
 
     @Override
-    public void getIngredients(MealsDataCallback<List<Ingredient>> callback) {
-        remoteDataSource.getIngredients(callback);
+    public Single<List<Ingredient>> getIngredients() {
+        return remoteDataSource.getIngredients()
+                .subscribeOn(Schedulers.io());
     }
 
     @Override
-    public void getPopularMeals(int count, MealsDataCallback<List<RemoteMeal>> callback) {
-        remoteDataSource.getPopularMeals(count, callback);
+    public Single<List<RemoteMeal>> getPopularMeals(int count) {
+        return remoteDataSource.getPopularMeals(count)
+                .subscribeOn(Schedulers.io());
     }
 
     @Override
-    public void getMealsByFilter(SearchType type, String filter, MealsDataCallback<List<RemoteMeal>> callback) {
-        remoteDataSource.getMealsByFilter(type, filter, callback);
+    public Single<List<RemoteMeal>> getMealsByFilter(SearchType type, String filter) {
+        return remoteDataSource.getMealsByFilter(type, filter)
+                .subscribeOn(Schedulers.io());
     }
 
     @Override
-    public void getMealById(String mealId, MealsDataCallback<RemoteMeal> callback) {
-        remoteDataSource.getMealById(mealId, callback);
+    public Single<RemoteMeal> getMealById(String mealId) {
+        return remoteDataSource.getMealById(mealId)
+                .subscribeOn(Schedulers.io());
     }
 }

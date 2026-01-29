@@ -1,19 +1,21 @@
 package com.example.cheffy.ui.home.presenter;
 
+import com.example.cheffy.common.base.BasePresenter;
 import com.example.cheffy.data.auth.repository.IAuthRepository;
 import com.example.cheffy.data.meals.models.Area;
 import com.example.cheffy.data.meals.models.Category;
 import com.example.cheffy.data.meals.models.Ingredient;
 import com.example.cheffy.data.meals.models.SearchType;
 import com.example.cheffy.data.meals.models.RemoteMeal;
-import com.example.cheffy.data.meals.repository.MealsDataCallback;
 import com.example.cheffy.data.meals.repository.IMealsRepository;
 
 import java.util.List;
 
-public class HomePresenter implements HomeContract.Presenter {
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Single;
 
-    private HomeContract.View view;
+public class HomePresenter extends BasePresenter<HomeContract.View> implements HomeContract.Presenter {
+
     private final IMealsRepository homeRepository;
     private final IAuthRepository authRepository;
 
@@ -26,31 +28,56 @@ public class HomePresenter implements HomeContract.Presenter {
 
     @Override
     public void attachView(HomeContract.View view) {
-        this.view = view;
+        super.attachView(view);
     }
 
     @Override
     public void detachView() {
-        this.view = null;
+        super.detachView();
     }
 
     @Override
     public void loadHomeData() {
-        if (view == null) return;
+        if (!isViewAttached()) return;
 
         loadUserName();
-
         view.showLoading();
 
-        loadMealOfTheDay();
-        loadCategories();
-        loadPopularMeals();
-        loadCuisines();
-        loadIngredients();
+        addDisposable(
+            Single.zip(
+                homeRepository.getRandomMeal(),
+                homeRepository.getCategories(),
+                homeRepository.getPopularMeals(POPULAR_MEALS_COUNT),
+                homeRepository.getAreas(),
+                homeRepository.getIngredients(),
+                HomeDataBundle::new
+            )
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                bundle -> {
+                    if (isViewAttached()) {
+                        view.hideLoading();
+                        view.showMealOfTheDay(bundle.mealOfTheDay);
+                        view.showCategories(bundle.categories);
+                        view.showPopularMeals(bundle.popularMeals);
+                        view.showCuisines(bundle.areas);
+                        view.showIngredients(bundle.ingredients);
+                    }
+                },
+                throwable -> {
+                    if (isViewAttached()) {
+                        view.hideLoading();
+                        view.showError(throwable.getMessage() != null 
+                            ? throwable.getMessage() 
+                            : "Failed to load home data");
+                    }
+                }
+            )
+        );
     }
 
     private void loadUserName() {
-        if (view == null) return;
+        if (!isViewAttached()) return;
 
         if (authRepository.isUserLoggedIn() && authRepository.getCurrentUser() != null) {
             String fullName = authRepository.getCurrentUser().getFullName();
@@ -63,129 +90,37 @@ public class HomePresenter implements HomeContract.Presenter {
         }
     }
 
-    private void loadMealOfTheDay() {
-        homeRepository.getRandomMeal(new MealsDataCallback<RemoteMeal>() {
-            @Override
-            public void onSuccess(RemoteMeal data) {
-                if (view != null) {
-                    view.showMealOfTheDay(data);
-                    view.hideLoading();
-                }
-            }
-
-            @Override
-            public void onError(String message) {
-                if (view != null) {
-                    view.showError(message);
-                    view.hideLoading();
-                }
-            }
-        });
-    }
-
-    private void loadCategories() {
-        homeRepository.getCategories(new MealsDataCallback<List<Category>>() {
-            @Override
-            public void onSuccess(List<Category> data) {
-                if (view != null) {
-                    view.showCategories(data);
-                }
-            }
-
-            @Override
-            public void onError(String message) {
-                if (view != null) {
-                    view.showError(message);
-                }
-            }
-        });
-    }
-
-    private void loadPopularMeals() {
-        homeRepository.getPopularMeals(POPULAR_MEALS_COUNT, new MealsDataCallback<List<RemoteMeal>>() {
-            @Override
-            public void onSuccess(List<RemoteMeal> data) {
-                if (view != null) {
-                    view.showPopularMeals(data);
-                }
-            }
-
-            @Override
-            public void onError(String message) {
-                if (view != null) {
-                    view.showError(message);
-                }
-            }
-        });
-    }
-
-    private void loadCuisines() {
-        homeRepository.getAreas(new MealsDataCallback<List<Area>>() {
-            @Override
-            public void onSuccess(List<Area> data) {
-                if (view != null) {
-                    view.showCuisines(data);
-                }
-            }
-
-            @Override
-            public void onError(String message) {
-                if (view != null) {
-                    view.showError(message);
-                }
-            }
-        });
-    }
-
-    private void loadIngredients() {
-        homeRepository.getIngredients(new MealsDataCallback<List<Ingredient>>() {
-            @Override
-            public void onSuccess(List<Ingredient> data) {
-                if (view != null) {
-                    view.showIngredients(data);
-                }
-            }
-
-            @Override
-            public void onError(String message) {
-                if (view != null) {
-                    view.showError(message);
-                }
-            }
-        });
-    }
-
     @Override
     public void onMealOfTheDayClicked(RemoteMeal meal) {
-        if (view != null && meal != null) {
+        if (isViewAttached() && meal != null) {
             view.navigateToMealDetails(meal);
         }
     }
 
     @Override
     public void onCategoryClicked(String category) {
-        if (view != null && category != null) {
+        if (isViewAttached() && category != null) {
             view.navigateToMealsList(category, SearchType.CATEGORY);
         }
     }
 
     @Override
     public void onCuisineClicked(String area) {
-        if (view != null && area != null) {
+        if (isViewAttached() && area != null) {
             view.navigateToMealsList(area, SearchType.AREA);
         }
     }
 
     @Override
     public void onIngredientClicked(String ingredient) {
-        if (view != null && ingredient != null) {
+        if (isViewAttached() && ingredient != null) {
             view.navigateToMealsList(ingredient, SearchType.INGREDIENT);
         }
     }
 
     @Override
     public void onPopularMealClicked(RemoteMeal meal) {
-        if (view != null && meal != null) {
+        if (isViewAttached() && meal != null) {
             view.navigateToMealDetails(meal);
         }
     }
@@ -193,5 +128,25 @@ public class HomePresenter implements HomeContract.Presenter {
     @Override
     public void onTryAgainClicked() {
         loadHomeData();
+    }
+
+    private static class HomeDataBundle {
+        final RemoteMeal mealOfTheDay;
+        final List<Category> categories;
+        final List<RemoteMeal> popularMeals;
+        final List<Area> areas;
+        final List<Ingredient> ingredients;
+
+        HomeDataBundle(RemoteMeal mealOfTheDay, 
+                       List<Category> categories,
+                       List<RemoteMeal> popularMeals, 
+                       List<Area> areas,
+                       List<Ingredient> ingredients) {
+            this.mealOfTheDay = mealOfTheDay;
+            this.categories = categories;
+            this.popularMeals = popularMeals;
+            this.areas = areas;
+            this.ingredients = ingredients;
+        }
     }
 }

@@ -1,15 +1,14 @@
 package com.example.cheffy.ui.mealslist.presenter;
 
+import com.example.cheffy.common.base.BasePresenter;
 import com.example.cheffy.data.meals.models.RemoteMeal;
 import com.example.cheffy.data.meals.models.SearchType;
 import com.example.cheffy.data.meals.repository.IMealsRepository;
-import com.example.cheffy.data.meals.repository.MealsDataCallback;
 
-import java.util.List;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 
-public class MealsListPresenter implements MealsListContract.Presenter {
+public class MealsListPresenter extends BasePresenter<MealsListContract.View> implements MealsListContract.Presenter {
 
-    private MealsListContract.View view;
     private final IMealsRepository mealsRepository;
 
     private String currentFilter;
@@ -21,17 +20,17 @@ public class MealsListPresenter implements MealsListContract.Presenter {
 
     @Override
     public void attachView(MealsListContract.View view) {
-        this.view = view;
+        super.attachView(view);
     }
 
     @Override
     public void detachView() {
-        this.view = null;
+        super.detachView();
     }
 
     @Override
     public void loadMeals(String filter, SearchType type) {
-        if (view == null) return;
+        if (!isViewAttached()) return;
 
         this.currentFilter = filter;
         this.currentType = type;
@@ -41,34 +40,35 @@ public class MealsListPresenter implements MealsListContract.Presenter {
 
         view.showLoading();
 
-        mealsRepository.getMealsByFilter(type, filter, new MealsDataCallback<List<RemoteMeal>>() {
-            @Override
-            public void onSuccess(List<RemoteMeal> data) {
-                if (view == null) return;
-
-                view.hideLoading();
-
-                if (data == null || data.isEmpty()) {
-                    view.showEmpty();
-                } else {
-                    view.showMeals(data);
-                }
-            }
-
-            @Override
-            public void onError(String message) {
-                if (view == null) return;
-
-                view.hideLoading();
-                view.showError(message);
-            }
-
-        });
+        addDisposable(
+            mealsRepository.getMealsByFilter(type, filter)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    meals -> {
+                        if (isViewAttached()) {
+                            view.hideLoading();
+                            if (meals == null || meals.isEmpty()) {
+                                view.showEmpty();
+                            } else {
+                                view.showMeals(meals);
+                            }
+                        }
+                    },
+                    throwable -> {
+                        if (isViewAttached()) {
+                            view.hideLoading();
+                            view.showError(throwable.getMessage() != null 
+                                ? throwable.getMessage() 
+                                : "Failed to load meals");
+                        }
+                    }
+                )
+        );
     }
 
     @Override
     public void onMealClicked(RemoteMeal meal) {
-        if (view != null && meal != null) {
+        if (isViewAttached() && meal != null) {
             view.navigateToMealDetails(meal);
         }
     }

@@ -1,13 +1,13 @@
 package com.example.cheffy.ui.signup.presenter;
 
-import com.example.cheffy.data.auth.models.User;
-import com.example.cheffy.data.auth.repository.AuthResultCallback;
+import com.example.cheffy.common.base.BasePresenter;
 import com.example.cheffy.data.auth.repository.IAuthRepository;
 import com.example.cheffy.utils.ValidationUtils;
 
-public class SignupPresenter implements SignupContract.Presenter {
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 
-    private SignupContract.View view;
+public class SignupPresenter extends BasePresenter<SignupContract.View> implements SignupContract.Presenter {
+
     private final IAuthRepository authRepository;
 
     public SignupPresenter(IAuthRepository authRepository) {
@@ -16,33 +16,33 @@ public class SignupPresenter implements SignupContract.Presenter {
 
     @Override
     public void attachView(SignupContract.View view) {
-        this.view = view;
+        super.attachView(view);
     }
 
     @Override
     public void registerUser(String fullName, String email, String password, String confirmPassword) {
         if (ValidationUtils.isEmpty(fullName)) {
-            if (view != null) view.showFullNameError("Full name is required");
+            if (isViewAttached()) view.showFullNameError("Full name is required");
             return;
         }
 
         if (ValidationUtils.isEmpty(email)) {
-            if (view != null) view.showEmailError("Email is required");
+            if (isViewAttached()) view.showEmailError("Email is required");
             return;
         }
 
         if (ValidationUtils.isInValidEmail(email)) {
-            if (view != null) view.showEmailError("Invalid email address format");
+            if (isViewAttached()) view.showEmailError("Invalid email address format");
             return;
         }
 
         if (ValidationUtils.isEmpty(password)) {
-            if (view != null) view.showPasswordError("Password is required");
+            if (isViewAttached()) view.showPasswordError("Password is required");
             return;
         }
 
         if (!ValidationUtils.isValidPassword(password)) {
-            if (view != null) {
+            if (isViewAttached()) {
                 view.showPasswordError("Password is too weak. Must contain:\n" +
                         "- At least 8 characters\n" +
                         "- One uppercase letter (A-Z)\n" +
@@ -53,38 +53,42 @@ public class SignupPresenter implements SignupContract.Presenter {
         }
 
         if (!password.equals(confirmPassword)) {
-            if (view != null) view.showConfirmPasswordError("Passwords do not match");
+            if (isViewAttached()) view.showConfirmPasswordError("Passwords do not match");
             return;
         }
 
-        if (view != null) view.showLoading();
+        if (isViewAttached()) view.showLoading();
 
-        authRepository.register(email, password, fullName, new AuthResultCallback() {
-            @Override
-            public void onSuccess(User user) {
-                if (view == null) return;
-                view.hideLoading();
-                view.showSuccessMessage("User registered successfully");
-                view.navigateToLoginScreen();
-            }
-
-            @Override
-            public void onError(String message) {
-                if (view == null) return;
-                view.hideLoading();
-                view.showErrorMessage(message != null ? message : "Registration failed");
-            }
-        });
+        addDisposable(
+            authRepository.register(email, password, fullName)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    user -> {
+                        if (isViewAttached()) {
+                            view.hideLoading();
+                            view.showSuccessMessage("User registered successfully");
+                            view.navigateToLoginScreen();
+                        }
+                    },
+                    throwable -> {
+                        if (isViewAttached()) {
+                            view.hideLoading();
+                            view.showErrorMessage(throwable.getMessage() != null 
+                                ? throwable.getMessage() 
+                                : "Registration failed");
+                        }
+                    }
+                )
+        );
     }
 
     @Override
     public void onLoginClicked() {
-        if (view != null) view.navigateToLoginScreen();
+        if (isViewAttached()) view.navigateToLoginScreen();
     }
 
     @Override
     public void detachView() {
-        view = null;
+        super.detachView();
     }
-
 }
