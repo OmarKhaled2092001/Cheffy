@@ -4,6 +4,7 @@ import com.example.cheffy.data.meals.models.Area;
 import com.example.cheffy.data.meals.models.Category;
 import com.example.cheffy.data.meals.models.Ingredient;
 import com.example.cheffy.data.meals.models.RemoteMeal;
+import com.example.cheffy.data.meals.models.SearchType;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface HomeContract {
         void showIngredients(List<Ingredient> ingredients);
         void showError(String message);
         void navigateToMealDetails(RemoteMeal meal);
-        void navigateToMealsList(String filter, String type);
+        void navigateToMealsList(String filter, SearchType type);
         void setUserName(String name);
     }
 
@@ -32,5 +33,6 @@ public interface HomeContract {
         void onCuisineClicked(String area);
         void onIngredientClicked(String ingredient);
         void onPopularMealClicked(RemoteMeal meal);
+        void onTryAgainClicked();
     }
 }
