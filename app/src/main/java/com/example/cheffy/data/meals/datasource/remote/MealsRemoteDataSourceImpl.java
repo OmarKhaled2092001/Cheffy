@@ -1,7 +1,5 @@
 package com.example.cheffy.data.meals.datasource.remote;
 
-import androidx.annotation.NonNull;
-
 import com.example.cheffy.data.meals.models.Area;
 import com.example.cheffy.data.meals.models.AreaResponse;
 import com.example.cheffy.data.meals.models.Category;
@@ -11,16 +9,13 @@ import com.example.cheffy.data.meals.models.IngredientResponse;
 import com.example.cheffy.data.meals.models.MealResponse;
 import com.example.cheffy.data.meals.models.RemoteMeal;
 import com.example.cheffy.data.meals.models.SearchType;
-import com.example.cheffy.data.meals.repository.MealsDataCallback;
 import com.example.cheffy.network.Network;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
 public class MealsRemoteDataSourceImpl implements IMealsRemoteDataSource {
 
@@ -39,148 +34,70 @@ public class MealsRemoteDataSourceImpl implements IMealsRemoteDataSource {
     }
 
     @Override
-    public void getRandomMeal(MealsDataCallback<RemoteMeal> callback) {
-        mealService.getRandomMeal().enqueue(new Callback<MealResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<MealResponse> call, @NonNull Response<MealResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<RemoteMeal> meals = response.body().getMeals();
-                    if (meals != null && !meals.isEmpty()) {
-                        callback.onSuccess(meals.get(0));
-                    } else {
-                        callback.onError("No meal found");
+    public Single<RemoteMeal> getRandomMeal() {
+        return mealService.getRandomMeal()
+                .map(response -> {
+                    if (response.getMeals() != null && !response.getMeals().isEmpty()) {
+                        return response.getMeals().get(0);
                     }
-                } else {
-                    callback.onError("Failed to fetch random meal");
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<MealResponse> call, @NonNull Throwable t) {
-                callback.onError(t.getMessage() != null ? t.getMessage() : "Network error");
-            }
-        });
+                    throw new RuntimeException("No meal found");
+                });
     }
 
     @Override
-    public void getCategories(MealsDataCallback<List<Category>> callback) {
-        mealService.getCategories().enqueue(new Callback<CategoryResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<CategoryResponse> call, @NonNull Response<CategoryResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Category> categories = response.body().getCategories();
-                    if (categories != null) {
-                        callback.onSuccess(categories);
-                    } else {
-                        callback.onError("No categories found");
+    public Single<List<Category>> getCategories() {
+        return mealService.getCategories()
+                .map(response -> {
+                    if (response.getCategories() != null) {
+                        return response.getCategories();
                     }
-                } else {
-                    callback.onError("Failed to fetch categories");
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<CategoryResponse> call, @NonNull Throwable t) {
-                callback.onError(t.getMessage() != null ? t.getMessage() : "Network error");
-            }
-        });
+                    throw new RuntimeException("No categories found");
+                });
     }
 
     @Override
-    public void getAreas(MealsDataCallback<List<Area>> callback) {
-        mealService.getAreas().enqueue(new Callback<AreaResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<AreaResponse> call, @NonNull Response<AreaResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Area> areas = response.body().getAreas();
-                    if (areas != null) {
-                        callback.onSuccess(areas);
-                    } else {
-                        callback.onError("No areas found");
+    public Single<List<Area>> getAreas() {
+        return mealService.getAreas()
+                .map(response -> {
+                    if (response.getAreas() != null) {
+                        return response.getAreas();
                     }
-                } else {
-                    callback.onError("Failed to fetch areas");
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<AreaResponse> call, @NonNull Throwable t) {
-                callback.onError(t.getMessage() != null ? t.getMessage() : "Network error");
-            }
-        });
+                    throw new RuntimeException("No areas found");
+                });
     }
 
     @Override
-    public void getIngredients(MealsDataCallback<List<Ingredient>> callback) {
-        mealService.getIngredients().enqueue(new Callback<IngredientResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<IngredientResponse> call, @NonNull Response<IngredientResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Ingredient> ingredients = response.body().getIngredients();
-                    if (ingredients != null) {
-                        int limit = Math.min(ingredients.size(), 20);
-                        callback.onSuccess(ingredients.subList(0, limit));
-                    } else {
-                        callback.onError("No ingredients found");
+    public Single<List<Ingredient>> getIngredients() {
+        return mealService.getIngredients()
+                .map(response -> {
+                    if (response.getIngredients() != null) {
+                        int limit = Math.min(response.getIngredients().size(), 20);
+                        return response.getIngredients().subList(0, limit);
                     }
-                } else {
-                    callback.onError("Failed to fetch ingredients");
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<IngredientResponse> call, @NonNull Throwable t) {
-                callback.onError(t.getMessage() != null ? t.getMessage() : "Network error");
-            }
-        });
+                    throw new RuntimeException("No ingredients found");
+                });
     }
 
     @Override
-    public void getPopularMeals(int count, MealsDataCallback<List<RemoteMeal>> callback) {
-        List<RemoteMeal> popularMeals = new ArrayList<>();
-        AtomicInteger completedCalls = new AtomicInteger(0);
-
-        for (int i = 0; i < count; i++) {
-            mealService.getRandomMeal().enqueue(new Callback<MealResponse>() {
-                @Override
-                public void onResponse(@NonNull Call<MealResponse> call, @NonNull Response<MealResponse> response) {
-                    synchronized (popularMeals) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            List<RemoteMeal> meals = response.body().getMeals();
-                            if (meals != null && !meals.isEmpty()) {
-                                popularMeals.add(meals.get(0));
+    public Single<List<RemoteMeal>> getPopularMeals(int count) {
+        return Observable.range(0, count)
+                .flatMapSingle(i -> mealService.getRandomMeal()
+                        .map(response -> {
+                            if (response.getMeals() != null && !response.getMeals().isEmpty()) {
+                                return response.getMeals().get(0);
                             }
-                        }
-
-                        if (completedCalls.incrementAndGet() == count) {
-                            if (!popularMeals.isEmpty()) {
-                                callback.onSuccess(popularMeals);
-                            } else {
-                                callback.onError("Failed to fetch popular meals");
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<MealResponse> call, @NonNull Throwable t) {
-                    synchronized (popularMeals) {
-                        if (completedCalls.incrementAndGet() == count) {
-                            if (!popularMeals.isEmpty()) {
-                                callback.onSuccess(popularMeals);
-                            } else {
-                                callback.onError("Network error fetching popular meals");
-                            }
-                        }
-                    }
-                }
-            });
-        }
+                            return null;
+                        })
+                        .onErrorReturnItem(new RemoteMeal())
+                )
+                .filter(meal -> meal != null && meal.getIdMeal() != null)
+                .distinct(RemoteMeal::getIdMeal)
+                .toList();
     }
 
     @Override
-    public void getMealsByFilter(SearchType type, String filter, MealsDataCallback<List<RemoteMeal>> callback) {
-        Call<MealResponse> call;
+    public Single<List<RemoteMeal>> getMealsByFilter(SearchType type, String filter) {
+        Single<MealResponse> call;
 
         switch (type) {
             case CATEGORY:
@@ -193,53 +110,25 @@ public class MealsRemoteDataSourceImpl implements IMealsRemoteDataSource {
                 call = mealService.filterByIngredient(filter);
                 break;
             default:
-                callback.onError("Unknown filter type");
-                return;
+                return Single.error(new RuntimeException("Unknown filter type"));
         }
 
-        call.enqueue(new Callback<MealResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<MealResponse> call, @NonNull Response<MealResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<RemoteMeal> meals = response.body().getMeals();
-                    if (meals != null) {
-                        callback.onSuccess(meals);
-                    } else {
-                        callback.onSuccess(new ArrayList<>());
-                    }
-                } else {
-                    callback.onError("Failed to fetch meals");
-                }
+        return call.map(response -> {
+            if (response.getMeals() != null) {
+                return response.getMeals();
             }
-
-            @Override
-            public void onFailure(@NonNull Call<MealResponse> call, @NonNull Throwable t) {
-                callback.onError(t.getMessage() != null ? t.getMessage() : "Network error");
-            }
+            return new ArrayList<>();
         });
     }
 
     @Override
-    public void getMealById(String mealId, MealsDataCallback<RemoteMeal> callback) {
-        mealService.getMealById(mealId).enqueue(new Callback<MealResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<MealResponse> call, @NonNull Response<MealResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<RemoteMeal> meals = response.body().getMeals();
-                    if (meals != null && !meals.isEmpty()) {
-                        callback.onSuccess(meals.get(0));
-                    } else {
-                        callback.onError("Meal not found");
+    public Single<RemoteMeal> getMealById(String mealId) {
+        return mealService.getMealById(mealId)
+                .map(response -> {
+                    if (response.getMeals() != null && !response.getMeals().isEmpty()) {
+                        return response.getMeals().get(0);
                     }
-                } else {
-                    callback.onError("Failed to fetch meal details");
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<MealResponse> call, @NonNull Throwable t) {
-                callback.onError(t.getMessage() != null ? t.getMessage() : "Network error");
-            }
-        });
+                    throw new RuntimeException("Meal not found");
+                });
     }
 }
