@@ -13,7 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="340dp"
         android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:elevation="8dp"
+        android:stateListAnimator="@null">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbar"
@@ -21,6 +23,7 @@
             android:layout_height="match_parent"
             app:contentScrim="@color/primary_color"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:scrimAnimationDuration="300"
             app:titleEnabled="false">
 
             <ImageView
@@ -42,6 +45,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:elevation="0dp"
                 app:layout_collapseMode="pin"
                 app:navigationIcon="@drawable/back" />
 
@@ -65,6 +69,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
+        android:contentDescription="@string/add_to_favorite_button"
         android:src="@drawable/favorite"
         app:backgroundTint="@color/primary_color"
         app:tint="@color/white"
