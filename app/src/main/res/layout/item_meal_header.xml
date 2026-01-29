@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/white_card_bg"
+    android:background="@color/white"
     android:paddingTop="24dp">
 
     <View
@@ -17,7 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Title with end margin to prevent FAB overlap -->
     <TextView
         android:id="@+id/tvMealName"
         android:layout_width="0dp"
@@ -34,7 +33,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/viewHandle" />
 
-    <!-- Flow layout for tags + button - wraps to next line if needed -->
     <androidx.constraintlayout.helper.widget.Flow
         android:id="@+id/tagsFlow"
         android:layout_width="0dp"

@@ -47,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
                         || id == R.id.loginFragment
                         || id == R.id.signupFragment
                         || id == R.id.forgotPasswordFragment
-                        || id == R.id.mealDetailsFragment) {
+                        || id == R.id.mealDetailsFragment
+                        || id == R.id.mealsListFragment) {
                     bottomNavigationView.setVisibility(View.GONE);
                 } else {
                     bottomNavigationView.setVisibility(View.VISIBLE);

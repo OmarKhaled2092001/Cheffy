@@ -6,6 +6,7 @@ import com.example.cheffy.data.meals.models.Area;
 import com.example.cheffy.data.meals.models.Category;
 import com.example.cheffy.data.meals.models.Ingredient;
 import com.example.cheffy.data.meals.models.RemoteMeal;
+import com.example.cheffy.data.meals.models.SearchType;
 
 import java.util.List;
 
@@ -48,5 +49,15 @@ public class MealsRepositoryImpl implements IMealsRepository {
     @Override
     public void getPopularMeals(int count, MealsDataCallback<List<RemoteMeal>> callback) {
         remoteDataSource.getPopularMeals(count, callback);
+    }
+
+    @Override
+    public void getMealsByFilter(SearchType type, String filter, MealsDataCallback<List<RemoteMeal>> callback) {
+        remoteDataSource.getMealsByFilter(type, filter, callback);
+    }
+
+    @Override
+    public void getMealById(String mealId, MealsDataCallback<RemoteMeal> callback) {
+        remoteDataSource.getMealById(mealId, callback);
     }
 }

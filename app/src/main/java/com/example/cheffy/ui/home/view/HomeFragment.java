@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.core.widget.NestedScrollView;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +23,7 @@ import com.example.cheffy.data.meals.models.Area;
 import com.example.cheffy.data.meals.models.Category;
 import com.example.cheffy.data.meals.models.Ingredient;
 import com.example.cheffy.data.meals.models.RemoteMeal;
+import com.example.cheffy.data.meals.models.SearchType;
 import com.example.cheffy.data.meals.repository.MealsRepositoryImpl;
 import com.example.cheffy.ui.home.presenter.HomeContract;
 import com.example.cheffy.ui.home.presenter.HomePresenter;
@@ -47,6 +49,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,
     private ImageView imgMealOfTheDay;
     private RecyclerView rvCategories, recyclerViewPopular, rvCuisines, rvIngredients;
     private ProgressBar progressBar;
+    private NestedScrollView nestedScrollView;
 
     private CategoriesAdapter categoriesAdapter;
     private PopularMealsAdapter popularMealsAdapter;
@@ -85,6 +88,8 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,
     }
 
     private void initViews(View view) {
+        nestedScrollView = view.findViewById(R.id.nestedScrollView);
+
         tvUsername = view.findViewById(R.id.tvUsername);
 
         cardMealOfTheDay = view.findViewById(R.id.cardMealOfTheDay);
@@ -123,8 +128,12 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,
 
     @Override
     public void showLoading() {
+        hideErrorState(new View[]{nestedScrollView});
         if (progressBar != null) {
             progressBar.setVisibility(View.VISIBLE);
+        }
+        if (nestedScrollView != null) {
+            nestedScrollView.setVisibility(View.GONE);
         }
     }
 
@@ -132,6 +141,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,
     public void hideLoading() {
         if (progressBar != null) {
             progressBar.setVisibility(View.GONE);
+        }
+        if (nestedScrollView != null) {
+            nestedScrollView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -175,7 +187,13 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,
 
     @Override
     public void showError(String message) {
-        showSnackBarError(message);
+        hideLoading();
+        showErrorState(
+                R.id.stubError,
+                message,
+                new View[]{nestedScrollView},
+                () -> presenter.onTryAgainClicked()
+        );
     }
 
     @Override
@@ -188,7 +206,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,
     }
 
     @Override
-    public void navigateToMealsList(String filter, String type) {
+    public void navigateToMealsList(String filter, SearchType type) {
         if (!isAdded() || getView() == null) return;
 
         HomeFragmentDirections.ActionHomeFragmentToMealsListFragment action =

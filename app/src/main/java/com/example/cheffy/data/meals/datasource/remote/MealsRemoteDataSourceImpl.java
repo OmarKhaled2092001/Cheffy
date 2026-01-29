@@ -10,6 +10,7 @@ import com.example.cheffy.data.meals.models.Ingredient;
 import com.example.cheffy.data.meals.models.IngredientResponse;
 import com.example.cheffy.data.meals.models.MealResponse;
 import com.example.cheffy.data.meals.models.RemoteMeal;
+import com.example.cheffy.data.meals.models.SearchType;
 import com.example.cheffy.data.meals.repository.MealsDataCallback;
 import com.example.cheffy.network.Network;
 
@@ -175,5 +176,70 @@ public class MealsRemoteDataSourceImpl implements IMealsRemoteDataSource {
                 }
             });
         }
+    }
+
+    @Override
+    public void getMealsByFilter(SearchType type, String filter, MealsDataCallback<List<RemoteMeal>> callback) {
+        Call<MealResponse> call;
+
+        switch (type) {
+            case CATEGORY:
+                call = mealService.filterByCategory(filter);
+                break;
+            case AREA:
+                call = mealService.filterByArea(filter);
+                break;
+            case INGREDIENT:
+                call = mealService.filterByIngredient(filter);
+                break;
+            default:
+                callback.onError("Unknown filter type");
+                return;
+        }
+
+        call.enqueue(new Callback<MealResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<MealResponse> call, @NonNull Response<MealResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<RemoteMeal> meals = response.body().getMeals();
+                    if (meals != null) {
+                        callback.onSuccess(meals);
+                    } else {
+                        callback.onSuccess(new ArrayList<>());
+                    }
+                } else {
+                    callback.onError("Failed to fetch meals");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MealResponse> call, @NonNull Throwable t) {
+                callback.onError(t.getMessage() != null ? t.getMessage() : "Network error");
+            }
+        });
+    }
+
+    @Override
+    public void getMealById(String mealId, MealsDataCallback<RemoteMeal> callback) {
+        mealService.getMealById(mealId).enqueue(new Callback<MealResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<MealResponse> call, @NonNull Response<MealResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<RemoteMeal> meals = response.body().getMeals();
+                    if (meals != null && !meals.isEmpty()) {
+                        callback.onSuccess(meals.get(0));
+                    } else {
+                        callback.onError("Meal not found");
+                    }
+                } else {
+                    callback.onError("Failed to fetch meal details");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MealResponse> call, @NonNull Throwable t) {
+                callback.onError(t.getMessage() != null ? t.getMessage() : "Network error");
+            }
+        });
     }
 }

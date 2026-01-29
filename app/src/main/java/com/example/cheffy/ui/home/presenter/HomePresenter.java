@@ -4,6 +4,7 @@ import com.example.cheffy.data.auth.repository.IAuthRepository;
 import com.example.cheffy.data.meals.models.Area;
 import com.example.cheffy.data.meals.models.Category;
 import com.example.cheffy.data.meals.models.Ingredient;
+import com.example.cheffy.data.meals.models.SearchType;
 import com.example.cheffy.data.meals.models.RemoteMeal;
 import com.example.cheffy.data.meals.repository.MealsDataCallback;
 import com.example.cheffy.data.meals.repository.IMealsRepository;
@@ -75,7 +76,7 @@ public class HomePresenter implements HomeContract.Presenter {
             @Override
             public void onError(String message) {
                 if (view != null) {
-                    view.showError("Failed to load meal of the day");
+                    view.showError(message);
                     view.hideLoading();
                 }
             }
@@ -94,7 +95,7 @@ public class HomePresenter implements HomeContract.Presenter {
             @Override
             public void onError(String message) {
                 if (view != null) {
-                    view.showError("Failed to load categories");
+                    view.showError(message);
                 }
             }
         });
@@ -112,7 +113,7 @@ public class HomePresenter implements HomeContract.Presenter {
             @Override
             public void onError(String message) {
                 if (view != null) {
-                    view.showError("Failed to load popular meals");
+                    view.showError(message);
                 }
             }
         });
@@ -130,7 +131,7 @@ public class HomePresenter implements HomeContract.Presenter {
             @Override
             public void onError(String message) {
                 if (view != null) {
-                    view.showError("Failed to load cuisines");
+                    view.showError(message);
                 }
             }
         });
@@ -148,7 +149,7 @@ public class HomePresenter implements HomeContract.Presenter {
             @Override
             public void onError(String message) {
                 if (view != null) {
-                    view.showError("Failed to load ingredients");
+                    view.showError(message);
                 }
             }
         });
@@ -164,21 +165,21 @@ public class HomePresenter implements HomeContract.Presenter {
     @Override
     public void onCategoryClicked(String category) {
         if (view != null && category != null) {
-            view.navigateToMealsList(category, "category");
+            view.navigateToMealsList(category, SearchType.CATEGORY);
         }
     }
 
     @Override
     public void onCuisineClicked(String area) {
         if (view != null && area != null) {
-            view.navigateToMealsList(area, "area");
+            view.navigateToMealsList(area, SearchType.AREA);
         }
     }
 
     @Override
     public void onIngredientClicked(String ingredient) {
         if (view != null && ingredient != null) {
-            view.navigateToMealsList(ingredient, "ingredient");
+            view.navigateToMealsList(ingredient, SearchType.INGREDIENT);
         }
     }
 
@@ -187,5 +188,10 @@ public class HomePresenter implements HomeContract.Presenter {
         if (view != null && meal != null) {
             view.navigateToMealDetails(meal);
         }
+    }
+
+    @Override
+    public void onTryAgainClicked() {
+        loadHomeData();
     }
 }

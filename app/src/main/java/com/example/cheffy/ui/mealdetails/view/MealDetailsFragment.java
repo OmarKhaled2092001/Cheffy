@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.example.cheffy.R;
 import com.example.cheffy.common.base.BaseFragment;
 import com.example.cheffy.data.meals.models.RemoteMeal;
+import com.example.cheffy.data.meals.repository.MealsRepositoryImpl;
 import com.example.cheffy.ui.mealdetails.model.IngredientItem;
 import com.example.cheffy.ui.mealdetails.presenter.MealDetailsContract;
 import com.example.cheffy.ui.mealdetails.presenter.MealDetailsPresenter;
@@ -48,7 +49,7 @@ public class MealDetailsFragment extends BaseFragment implements MealDetailsCont
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new MealDetailsPresenter();
+        presenter = new MealDetailsPresenter(MealsRepositoryImpl.getInstance());
 
         if (getArguments() != null) {
             MealDetailsFragmentArgs args = MealDetailsFragmentArgs.fromBundle(getArguments());
@@ -153,12 +154,14 @@ public class MealDetailsFragment extends BaseFragment implements MealDetailsCont
 
     @Override
     public void onIngredientsTabSelected() {
+        ingredientsAdapter.setVisible(true);
         footerAdapter.setInstructionsVisible(false);
     }
 
     @Override
     public void onInstructionsTabSelected() {
         footerAdapter.setInstructionsVisible(true);
+        ingredientsAdapter.setVisible(false);
     }
 
     @Override

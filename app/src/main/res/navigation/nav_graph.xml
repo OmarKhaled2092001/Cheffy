@@ -111,15 +111,18 @@
     </fragment>
     <fragment
         android:id="@+id/mealsListFragment"
-        android:name="com.example.cheffy.ui.MealsListFragment"
+        android:name="com.example.cheffy.ui.mealslist.view.MealsListFragment"
         android:label="fragment_meals_list"
         tools:layout="@layout/fragment_meals_list">
         <argument
             android:name="filter"
             app:argType="string" />
         <argument
-            android:name="type"
-            app:argType="string" />
+            android:name="searchType"
+            app:argType="com.example.cheffy.data.meals.models.SearchType" />
+        <action
+            android:id="@+id/action_mealsListFragment_to_mealDetailsFragment"
+            app:destination="@id/mealDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/forgotPasswordFragment"
