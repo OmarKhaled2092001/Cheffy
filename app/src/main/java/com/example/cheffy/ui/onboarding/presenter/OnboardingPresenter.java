@@ -2,7 +2,7 @@ package com.example.cheffy.ui.onboarding.presenter;
 
 import com.example.cheffy.R;
 import com.example.cheffy.data.local.AppPreferences;
-import com.example.cheffy.ui.onboarding.models.OnboardingItem;
+import com.example.cheffy.ui.onboarding.model.OnboardingItem;
 
 import java.util.ArrayList;
 import java.util.List;

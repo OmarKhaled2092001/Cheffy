@@ -80,4 +80,5 @@
     <string name="facebook_login_button">Facebook Login Button</string>
     <string name="google_login_button">Google Login Button</string>
     <string name="twitter_login_button">Twitter Login Button</string>
+    <string name="add_to_favorite_button">Add to Favorite Button</string>
 </resources>

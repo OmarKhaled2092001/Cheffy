@@ -17,12 +17,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Title with end margin to prevent FAB overlap -->
     <TextView
         android:id="@+id/tvMealName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="72dp"
         android:fontFamily="serif"
         android:textColor="@color/black"
         android:textSize="26sp"
@@ -32,73 +34,66 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/viewHandle" />
 
-    <LinearLayout
-        android:id="@+id/tagsContainer"
+    <!-- Flow layout for tags + button - wraps to next line if needed -->
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/tagsFlow"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="12dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        app:layout_constraintEnd_toEndOf="@id/tvMealName"
-        app:layout_constraintStart_toStartOf="@id/tvMealName"
-        app:layout_constraintTop_toBottomOf="@id/tvMealName">
+        android:layout_marginEnd="24dp"
+        app:flow_wrapMode="aligned"
+        app:flow_horizontalGap="8dp"
+        app:flow_verticalGap="8dp"
+        app:flow_horizontalStyle="packed"
+        app:flow_horizontalBias="0"
+        app:constraint_referenced_ids="chipCategory,chipArea,btnAddToPlan"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvMealName" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:singleLine="true"
-            app:selectionRequired="false">
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chipCategory"
+        style="@style/Widget.MaterialComponents.Chip.Action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primary_color"
+        app:chipBackgroundColor="#FFF3E0"
+        app:chipStrokeWidth="0dp"
+        android:clickable="false"
+        tools:text="Dinner" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipCategory"
-                style="@style/Widget.MaterialComponents.Chip.Action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/primary_color"
-                app:chipBackgroundColor="#FFF3E0"
-                app:chipStrokeWidth="0dp"
-                android:clickable="false"
-                tools:text="Dinner" />
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chipArea"
+        style="@style/Widget.MaterialComponents.Chip.Action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#1976D2"
+        app:chipBackgroundColor="#E3F2FD"
+        app:chipStrokeWidth="0dp"
+        android:clickable="false"
+        tools:text="Italian" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipArea"
-                style="@style/Widget.MaterialComponents.Chip.Action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#1976D2"
-                app:chipBackgroundColor="#E3F2FD"
-                app:chipStrokeWidth="0dp"
-                android:clickable="false"
-                tools:text="Italian" />
-
-        </com.google.android.material.chip.ChipGroup>
-
-        <Space
-            android:layout_width="8dp"
-            android:layout_height="wrap_content" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnAddToPlan"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="0dp"
-            android:paddingVertical="6dp"
-            android:paddingHorizontal="16dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="@string/add_to_plan"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:backgroundTint="@color/black"
-            app:cornerRadius="20dp"
-            app:elevation="0dp"
-            app:icon="@drawable/calendar"
-            app:iconTint="@color/white"
-            app:iconSize="16dp" />
-
-    </LinearLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnAddToPlan"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="0dp"
+        android:paddingVertical="6dp"
+        android:paddingHorizontal="16dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="@string/add_to_plan"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:backgroundTint="@color/black"
+        app:cornerRadius="20dp"
+        app:elevation="0dp"
+        app:icon="@drawable/calendar"
+        app:iconTint="@color/white"
+        app:iconSize="16dp" />
 
     <TextView
         android:id="@+id/tvDescription"
@@ -108,10 +103,10 @@
         android:layout_marginHorizontal="24dp"
         android:textColor="@color/text_gray"
         android:textSize="14sp"
-        tools:text="@string/meal_details_description"
+        android:text="@string/meal_details_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tagsContainer" />
+        app:layout_constraintTop_toBottomOf="@id/tagsFlow" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
