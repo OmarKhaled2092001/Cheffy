@@ -1,12 +1,14 @@
 package com.example.cheffy.ui.home.presenter;
 
-import com.example.cheffy.data.meals.models.Area;
-import com.example.cheffy.data.meals.models.Category;
-import com.example.cheffy.data.meals.models.Ingredient;
-import com.example.cheffy.data.meals.models.RemoteMeal;
+import com.example.cheffy.data.meals.models.remote.Area;
+import com.example.cheffy.data.meals.models.remote.Category;
+import com.example.cheffy.data.meals.models.remote.Ingredient;
+import com.example.cheffy.data.meals.models.remote.RemoteMeal;
 import com.example.cheffy.data.meals.models.SearchType;
+import com.example.cheffy.ui.search.SearchFilterType;
 
 import java.util.List;
+import java.util.Set;
 
 public interface HomeContract {
 
@@ -21,7 +23,11 @@ public interface HomeContract {
         void showError(String message);
         void navigateToMealDetails(RemoteMeal meal);
         void navigateToMealsList(String filter, SearchType type);
+        void navigateToSearch(SearchFilterType filterType);
         void setUserName(String name);
+        void showAddedToFavorites(String mealId);
+        void showRemovedFromFavorites(String mealId);
+        void setFavoriteIds(Set<String> favoriteIds);
     }
 
     interface Presenter {
@@ -34,5 +40,6 @@ public interface HomeContract {
         void onIngredientClicked(String ingredient);
         void onPopularMealClicked(RemoteMeal meal);
         void onTryAgainClicked();
+        void onPopularMealFavoriteClicked(RemoteMeal meal);
     }
 }

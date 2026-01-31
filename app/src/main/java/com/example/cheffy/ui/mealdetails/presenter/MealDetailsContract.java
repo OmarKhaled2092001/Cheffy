@@ -1,6 +1,6 @@
 package com.example.cheffy.ui.mealdetails.presenter;
 
-import com.example.cheffy.data.meals.models.RemoteMeal;
+import com.example.cheffy.data.meals.models.remote.RemoteMeal;
 import com.example.cheffy.ui.mealdetails.model.IngredientItem;
 
 import java.util.List;
@@ -12,6 +12,8 @@ public interface MealDetailsContract {
         void showIngredients(List<IngredientItem> ingredients);
         void showInstructions(String instructions, String youtubeUrl);
         void showAddToFavoritesMessage();
+        void showRemovedFromFavoritesMessage();
+        void updateFavoriteIcon(boolean isFavorite);
         void showError(String message);
     }
 

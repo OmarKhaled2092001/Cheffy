@@ -5,6 +5,7 @@ import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -16,16 +17,31 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private CardView bottomNavContainer;
+    private boolean shouldShowBottomNav = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+        bottomNavContainer = findViewById(R.id.bottomNavContainer);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             Insets imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime());
-            int bottomPadding = Math.max(systemBars.bottom, imeInsets.bottom);
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, bottomPadding);
+
+            boolean isKeyboardVisible = imeInsets.bottom > 0;
+
+            if (isKeyboardVisible) {
+                bottomNavContainer.setVisibility(View.GONE);
+            } else if (shouldShowBottomNav) {
+                bottomNavContainer.setVisibility(View.VISIBLE);
+            }
+
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
@@ -33,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (navHostFragment != null) {
             NavController navController = navHostFragment.getNavController();
-
-            BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
             NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
@@ -49,12 +63,13 @@ public class MainActivity extends AppCompatActivity {
                         || id == R.id.forgotPasswordFragment
                         || id == R.id.mealDetailsFragment
                         || id == R.id.mealsListFragment) {
-                    bottomNavigationView.setVisibility(View.GONE);
+                    shouldShowBottomNav = false;
+                    bottomNavContainer.setVisibility(View.GONE);
                 } else {
-                    bottomNavigationView.setVisibility(View.VISIBLE);
+                    shouldShowBottomNav = true;
+                    bottomNavContainer.setVisibility(View.VISIBLE);
                 }
             });
         }
-
     }
 }

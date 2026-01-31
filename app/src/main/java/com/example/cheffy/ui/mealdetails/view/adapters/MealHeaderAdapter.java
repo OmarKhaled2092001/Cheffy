@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cheffy.R;
-import com.example.cheffy.data.meals.models.RemoteMeal;
+import com.example.cheffy.data.meals.models.remote.RemoteMeal;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.tabs.TabLayout;

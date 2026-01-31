@@ -1,9 +1,9 @@
 package com.example.cheffy.data.meals.datasource.remote;
 
-import com.example.cheffy.data.meals.models.AreaResponse;
-import com.example.cheffy.data.meals.models.CategoryResponse;
-import com.example.cheffy.data.meals.models.IngredientResponse;
-import com.example.cheffy.data.meals.models.MealResponse;
+import com.example.cheffy.data.meals.models.remote.AreaResponse;
+import com.example.cheffy.data.meals.models.remote.CategoryResponse;
+import com.example.cheffy.data.meals.models.remote.IngredientResponse;
+import com.example.cheffy.data.meals.models.remote.MealResponse;
 
 import io.reactivex.rxjava3.core.Single;
 import retrofit2.http.GET;
@@ -24,6 +24,9 @@ public interface MealService {
 
     @GET("search.php")
     Single<MealResponse> searchMealsByName(@Query("s") String name);
+
+    @GET("search.php")
+    Single<MealResponse> searchMealsByFirstLetter(@Query("f") String firstLetter);
 
     @GET("filter.php")
     Single<MealResponse> filterByCategory(@Query("c") String category);

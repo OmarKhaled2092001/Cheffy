@@ -1,9 +1,9 @@
 package com.example.cheffy.data.meals.datasource.remote;
 
-import com.example.cheffy.data.meals.models.Area;
-import com.example.cheffy.data.meals.models.Category;
-import com.example.cheffy.data.meals.models.Ingredient;
-import com.example.cheffy.data.meals.models.RemoteMeal;
+import com.example.cheffy.data.meals.models.remote.Area;
+import com.example.cheffy.data.meals.models.remote.Category;
+import com.example.cheffy.data.meals.models.remote.Ingredient;
+import com.example.cheffy.data.meals.models.remote.RemoteMeal;
 import com.example.cheffy.data.meals.models.SearchType;
 
 import java.util.List;
@@ -22,6 +22,10 @@ public interface IMealsRemoteDataSource {
     Single<List<RemoteMeal>> getPopularMeals(int count);
 
     Single<List<RemoteMeal>> getMealsByFilter(SearchType type, String filter);
+
+    Single<List<RemoteMeal>> searchMealsByName(String query);
+
+    Single<List<RemoteMeal>> searchMealsByFirstLetter(String letter);
 
     Single<RemoteMeal> getMealById(String mealId);
 }

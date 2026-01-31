@@ -11,17 +11,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.cheffy.R;
-import com.example.cheffy.data.meals.models.RemoteMeal;
+import com.example.cheffy.data.meals.models.remote.RemoteMeal;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class PopularMealsAdapter extends RecyclerView.Adapter<PopularMealsAdapter.MealViewHolder> {
 
     private List<RemoteMeal> meals = new ArrayList<>();
+    private Set<String> favoriteIds = new HashSet<>();
     private final OnMealClickListener listener;
-
-
 
     public PopularMealsAdapter(OnMealClickListener listener) {
         this.listener = listener;
@@ -30,6 +31,29 @@ public class PopularMealsAdapter extends RecyclerView.Adapter<PopularMealsAdapte
     public void setMeals(List<RemoteMeal> meals) {
         this.meals = meals;
         notifyDataSetChanged();
+    }
+
+    public void setFavoriteIds(Set<String> favoriteIds) {
+        this.favoriteIds = favoriteIds != null ? favoriteIds : new HashSet<>();
+        notifyDataSetChanged();
+    }
+
+    public void updateFavoriteStatus(String mealId, boolean isFavorite) {
+        if (isFavorite) {
+            favoriteIds.add(mealId);
+        } else {
+            favoriteIds.remove(mealId);
+        }
+        for (int i = 0; i < meals.size(); i++) {
+            if (meals.get(i).getIdMeal().equals(mealId)) {
+                notifyItemChanged(i);
+                break;
+            }
+        }
+    }
+
+    public boolean isFavorite(String mealId) {
+        return favoriteIds.contains(mealId);
     }
 
     @NonNull
@@ -43,7 +67,8 @@ public class PopularMealsAdapter extends RecyclerView.Adapter<PopularMealsAdapte
     @Override
     public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
         RemoteMeal meal = meals.get(position);
-        holder.bind(meal);
+        boolean isFav = favoriteIds.contains(meal.getIdMeal());
+        holder.bind(meal, isFav);
     }
 
     @Override
@@ -55,6 +80,7 @@ public class PopularMealsAdapter extends RecyclerView.Adapter<PopularMealsAdapte
         private final ImageView ivPopularMeal;
         private final TextView tvPopularMealName;
         private final TextView tvPopularMealArea;
+        private final ImageView btnAddToFav;
         private RemoteMeal currentMeal;
 
 
@@ -63,6 +89,7 @@ public class PopularMealsAdapter extends RecyclerView.Adapter<PopularMealsAdapte
             ivPopularMeal = itemView.findViewById(R.id.ivPopularMeal);
             tvPopularMealName = itemView.findViewById(R.id.tvPopularMealName);
             tvPopularMealArea = itemView.findViewById(R.id.tvPopularMealArea);
+            btnAddToFav = itemView.findViewById(R.id.btnAddToFav);
 
             itemView.setOnClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();
@@ -70,13 +97,26 @@ public class PopularMealsAdapter extends RecyclerView.Adapter<PopularMealsAdapte
                     listener.onMealClick(currentMeal);
                 }
             });
+
+            btnAddToFav.setOnClickListener(v -> {
+                int position = getAbsoluteAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && listener != null && currentMeal != null) {
+                    listener.onFavoriteClick(currentMeal);
+                }
+            });
         }
 
-        void bind(RemoteMeal meal) {
+        void bind(RemoteMeal meal, boolean isFavorite) {
             this.currentMeal = meal;
 
             tvPopularMealName.setText(meal.getName());
             tvPopularMealArea.setText(meal.getArea());
+
+            if (isFavorite) {
+                btnAddToFav.setImageResource(R.drawable.ic_favorite_filled);
+            } else {
+                btnAddToFav.setImageResource(R.drawable.favorite);
+            }
 
             Glide.with(itemView.getContext())
                     .load(meal.getThumbnail())
@@ -86,3 +126,4 @@ public class PopularMealsAdapter extends RecyclerView.Adapter<PopularMealsAdapte
         }
     }
 }
+

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.cheffy.R;
-import com.example.cheffy.data.meals.models.Category;
+import com.example.cheffy.data.meals.models.remote.Category;
 
 import java.util.ArrayList;
 import java.util.List;
