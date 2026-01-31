@@ -1,13 +1,10 @@
 package com.example.cheffy.data.meals.datasource.remote;
 
-import com.example.cheffy.data.meals.models.Area;
-import com.example.cheffy.data.meals.models.AreaResponse;
-import com.example.cheffy.data.meals.models.Category;
-import com.example.cheffy.data.meals.models.CategoryResponse;
-import com.example.cheffy.data.meals.models.Ingredient;
-import com.example.cheffy.data.meals.models.IngredientResponse;
-import com.example.cheffy.data.meals.models.MealResponse;
-import com.example.cheffy.data.meals.models.RemoteMeal;
+import com.example.cheffy.data.meals.models.remote.Area;
+import com.example.cheffy.data.meals.models.remote.Category;
+import com.example.cheffy.data.meals.models.remote.Ingredient;
+import com.example.cheffy.data.meals.models.remote.MealResponse;
+import com.example.cheffy.data.meals.models.remote.RemoteMeal;
 import com.example.cheffy.data.meals.models.SearchType;
 import com.example.cheffy.network.Network;
 
@@ -129,6 +126,28 @@ public class MealsRemoteDataSourceImpl implements IMealsRemoteDataSource {
                         return response.getMeals().get(0);
                     }
                     throw new RuntimeException("Meal not found");
+                });
+    }
+
+    @Override
+    public Single<List<RemoteMeal>> searchMealsByName(String query) {
+        return mealService.searchMealsByName(query)
+                .map(response -> {
+                    if (response.getMeals() != null) {
+                        return response.getMeals();
+                    }
+                    return new ArrayList<>();
+                });
+    }
+
+    @Override
+    public Single<List<RemoteMeal>> searchMealsByFirstLetter(String letter) {
+        return mealService.searchMealsByFirstLetter(letter)
+                .map(response -> {
+                    if (response.getMeals() != null) {
+                        return response.getMeals();
+                    }
+                    return new ArrayList<>();
                 });
     }
 }

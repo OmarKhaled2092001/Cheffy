@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.cheffy.R;
-import com.example.cheffy.data.meals.models.Area;
+import com.example.cheffy.data.meals.models.remote.Area;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;

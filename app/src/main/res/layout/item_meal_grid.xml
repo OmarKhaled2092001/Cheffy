@@ -58,9 +58,11 @@
             android:layout_margin="8dp"
             android:background="@drawable/circle_btn_bg"
             android:padding="6dp"
-            android:src="@drawable/ic_next_arrow"
-            app:tint="@color/primary_color"
-            android:rotation="90"
+            android:src="@drawable/favorite"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="@string/add_to_favorite_button"
+            app:tint="@color/red"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

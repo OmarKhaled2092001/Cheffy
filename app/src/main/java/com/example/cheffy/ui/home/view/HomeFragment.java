@@ -19,13 +19,14 @@ import com.bumptech.glide.Glide;
 import com.example.cheffy.R;
 import com.example.cheffy.common.base.BaseFragment;
 import com.example.cheffy.data.auth.repository.AuthRepositoryImpl;
-import com.example.cheffy.data.meals.models.Area;
-import com.example.cheffy.data.meals.models.Category;
-import com.example.cheffy.data.meals.models.Ingredient;
-import com.example.cheffy.data.meals.models.RemoteMeal;
+import com.example.cheffy.data.meals.models.remote.Area;
+import com.example.cheffy.data.meals.models.remote.Category;
+import com.example.cheffy.data.meals.models.remote.Ingredient;
+import com.example.cheffy.data.meals.models.remote.RemoteMeal;
 import com.example.cheffy.data.meals.models.SearchType;
 import com.example.cheffy.data.meals.repository.MealsRepositoryImpl;
 import com.example.cheffy.ui.home.presenter.HomeContract;
+import com.example.cheffy.ui.search.SearchFilterType;
 import com.example.cheffy.ui.home.presenter.HomePresenter;
 import com.example.cheffy.ui.home.view.adapters.CategoriesAdapter;
 import com.example.cheffy.ui.home.view.adapters.CuisinesAdapter;
@@ -37,6 +38,7 @@ import com.example.cheffy.ui.home.view.adapters.OnMealClickListener;
 import com.example.cheffy.ui.home.view.adapters.PopularMealsAdapter;
 
 import java.util.List;
+import java.util.Set;
 
 public class HomeFragment extends BaseFragment implements HomeContract.View,
         OnCategoryClickListener,
@@ -50,6 +52,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,
     private RecyclerView rvCategories, recyclerViewPopular, rvCuisines, rvIngredients;
     private ProgressBar progressBar;
     private NestedScrollView nestedScrollView;
+    private TextView tvSeeAllCategories, tvSeeAllCuisines, tvSeeAllIngredients;
 
     private CategoriesAdapter categoriesAdapter;
     private PopularMealsAdapter popularMealsAdapter;
@@ -64,7 +67,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,
         super.onCreate(savedInstanceState);
 
         presenter = new HomePresenter(
-                MealsRepositoryImpl.getInstance(),
+                MealsRepositoryImpl.getInstance(requireContext()),
                 AuthRepositoryImpl.getInstance()
         );
     }
@@ -102,6 +105,10 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,
         rvIngredients = view.findViewById(R.id.rvIngredients);
 
         progressBar = view.findViewById(R.id.progressBar);
+
+        tvSeeAllCategories = view.findViewById(R.id.tvSeeAllCategories);
+        tvSeeAllCuisines = view.findViewById(R.id.tvSeeAllCuisines);
+        tvSeeAllIngredients = view.findViewById(R.id.tvSeeAllIngredients);
     }
 
     private void initAdapters() {
@@ -124,6 +131,10 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,
                 presenter.onMealOfTheDayClicked(mealOfTheDay);
             }
         });
+
+        tvSeeAllCategories.setOnClickListener(v -> navigateToSearch(SearchFilterType.CATEGORY));
+        tvSeeAllCuisines.setOnClickListener(v -> navigateToSearch(SearchFilterType.COUNTRY));
+        tvSeeAllIngredients.setOnClickListener(v -> navigateToSearch(SearchFilterType.INGREDIENT));
     }
 
     @Override
@@ -215,6 +226,15 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,
     }
 
     @Override
+    public void navigateToSearch(SearchFilterType filterType) {
+        if (!isAdded() || getView() == null) return;
+
+        HomeFragmentDirections.ActionHomeFragmentToSearchFragment action =
+                HomeFragmentDirections.actionHomeFragmentToSearchFragment(filterType);
+        Navigation.findNavController(requireView()).navigate(action);
+    }
+
+    @Override
     public void setUserName(String name) {
         if (!isAdded() || getView() == null) return;
         tvUsername.setText(name);
@@ -231,6 +251,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,
     }
 
     @Override
+    public void onFavoriteClick(RemoteMeal meal) {
+        presenter.onPopularMealFavoriteClicked(meal);
+    }
+
+    @Override
     public void onCuisineClick(Area area) {
         presenter.onCuisineClicked(area.getName());
     }
@@ -244,5 +269,25 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,
     public void onDestroyView() {
         super.onDestroyView();
         presenter.detachView();
+    }
+
+    @Override
+    public void showAddedToFavorites(String mealId) {
+        if (!isAdded() || getView() == null) return;
+        popularMealsAdapter.updateFavoriteStatus(mealId, true);
+        showSnackBarSuccess("Added to favorites!");
+    }
+
+    @Override
+    public void showRemovedFromFavorites(String mealId) {
+        if (!isAdded() || getView() == null) return;
+        popularMealsAdapter.updateFavoriteStatus(mealId, false);
+        showSnackBarSuccess("Removed from favorites!");
+    }
+
+    @Override
+    public void setFavoriteIds(Set<String> favoriteIds) {
+        if (!isAdded() || getView() == null) return;
+        popularMealsAdapter.setFavoriteIds(favoriteIds);
     }
 }

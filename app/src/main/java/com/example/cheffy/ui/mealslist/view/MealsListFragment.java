@@ -16,7 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.cheffy.R;
 import com.example.cheffy.common.base.BaseFragment;
-import com.example.cheffy.data.meals.models.RemoteMeal;
+import com.example.cheffy.data.meals.models.remote.RemoteMeal;
 import com.example.cheffy.data.meals.models.SearchType;
 import com.example.cheffy.data.meals.repository.MealsRepositoryImpl;
 import com.example.cheffy.ui.mealslist.presenter.MealsListContract;
@@ -25,6 +25,7 @@ import com.example.cheffy.ui.mealslist.view.adapter.MealsGridAdapter;
 import com.example.cheffy.ui.mealslist.view.adapter.OnMealGridClickListener;
 
 import java.util.List;
+import java.util.Set;
 
 public class MealsListFragment extends BaseFragment implements
         MealsListContract.View,
@@ -52,7 +53,7 @@ public class MealsListFragment extends BaseFragment implements
             searchType = args.getSearchType();
         }
 
-        presenter = new MealsListPresenter(MealsRepositoryImpl.getInstance());
+        presenter = new MealsListPresenter(MealsRepositoryImpl.getInstance(requireContext()));
     }
 
     @Override
@@ -181,8 +182,34 @@ public class MealsListFragment extends BaseFragment implements
     }
 
     @Override
+    public void onFavoriteClick(RemoteMeal meal) {
+        presenter.onMealFavoriteClicked(meal);
+    }
+
+    @Override
+    public void showAddedToFavorites(String mealId) {
+        if (!isAdded() || getView() == null) return;
+        adapter.updateFavoriteStatus(mealId, true);
+        showSnackBarSuccess("Added to favorites!");
+    }
+
+    @Override
+    public void showRemovedFromFavorites(String mealId) {
+        if (!isAdded() || getView() == null) return;
+        adapter.updateFavoriteStatus(mealId, false);
+        showSnackBarSuccess("Removed from favorites!");
+    }
+
+    @Override
+    public void setFavoriteIds(Set<String> favoriteIds) {
+        if (!isAdded() || getView() == null) return;
+        adapter.setFavoriteIds(favoriteIds);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         presenter.detachView();
     }
 }
+

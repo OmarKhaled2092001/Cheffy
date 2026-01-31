@@ -1,4 +1,4 @@
-package com.example.cheffy.data.meals.models;
+package com.example.cheffy.data.meals.models.remote;
 
 import android.os.Parcel;
 import android.os.Parcelable;

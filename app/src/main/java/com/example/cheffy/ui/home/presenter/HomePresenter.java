@@ -2,14 +2,16 @@ package com.example.cheffy.ui.home.presenter;
 
 import com.example.cheffy.common.base.BasePresenter;
 import com.example.cheffy.data.auth.repository.IAuthRepository;
-import com.example.cheffy.data.meals.models.Area;
-import com.example.cheffy.data.meals.models.Category;
-import com.example.cheffy.data.meals.models.Ingredient;
+import com.example.cheffy.data.meals.models.remote.Area;
+import com.example.cheffy.data.meals.models.remote.Category;
+import com.example.cheffy.data.meals.models.remote.Ingredient;
 import com.example.cheffy.data.meals.models.SearchType;
-import com.example.cheffy.data.meals.models.RemoteMeal;
+import com.example.cheffy.data.meals.models.remote.RemoteMeal;
 import com.example.cheffy.data.meals.repository.IMealsRepository;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Single;
@@ -18,6 +20,7 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
 
     private final IMealsRepository homeRepository;
     private final IAuthRepository authRepository;
+    private Set<String> favoriteIds = new HashSet<>();
 
     private static final int POPULAR_MEALS_COUNT = 10;
 
@@ -41,6 +44,7 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
         if (!isViewAttached()) return;
 
         loadUserName();
+        loadFavoriteIds();
         view.showLoading();
 
         addDisposable(
@@ -73,6 +77,26 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
                     }
                 }
             )
+        );
+    }
+
+    private void loadFavoriteIds() {
+        addDisposable(
+            homeRepository.observeFavorites()
+                .firstOrError()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    favorites -> {
+                        favoriteIds.clear();
+                        for (RemoteMeal meal : favorites) {
+                            favoriteIds.add(meal.getIdMeal());
+                        }
+                        if (isViewAttached()) {
+                            view.setFavoriteIds(favoriteIds);
+                        }
+                    },
+                    throwable -> { }
+                )
         );
     }
 
@@ -130,6 +154,54 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
         loadHomeData();
     }
 
+    @Override
+    public void onPopularMealFavoriteClicked(RemoteMeal meal) {
+        if (!isViewAttached() || meal == null) return;
+        
+        String mealId = meal.getIdMeal();
+        boolean isFavorite = favoriteIds.contains(mealId);
+        
+        if (isFavorite) {
+            // Remove from favorites
+            addDisposable(
+                homeRepository.removeFavorite(meal)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                        () -> {
+                            favoriteIds.remove(mealId);
+                            if (isViewAttached()) {
+                                view.showRemovedFromFavorites(mealId);
+                            }
+                        },
+                        throwable -> {
+                            if (isViewAttached()) {
+                                view.showError("Failed to remove from favorites");
+                            }
+                        }
+                    )
+            );
+        } else {
+            // Add to favorites
+            addDisposable(
+                homeRepository.addFavorite(meal)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                        () -> {
+                            favoriteIds.add(mealId);
+                            if (isViewAttached()) {
+                                view.showAddedToFavorites(mealId);
+                            }
+                        },
+                        throwable -> {
+                            if (isViewAttached()) {
+                                view.showError("Failed to add to favorites");
+                            }
+                        }
+                    )
+            );
+        }
+    }
+
     private static class HomeDataBundle {
         final RemoteMeal mealOfTheDay;
         final List<Category> categories;
@@ -150,3 +222,4 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
         }
     }
 }
+

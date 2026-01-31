@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.cardview.widget.CardView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 
 import com.example.cheffy.R;
@@ -37,10 +39,21 @@ public class SnackbarHelper {
         layout.setBackgroundColor(Color.TRANSPARENT);
         layout.setPadding(0, 0, 0, 0);
 
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) layout.getLayoutParams();
-        params.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
-        params.setMargins(30, 0, 30, 30);
-        layout.setLayoutParams(params);
+        ViewGroup.LayoutParams currentParams = layout.getLayoutParams();
+        if (currentParams instanceof CoordinatorLayout.LayoutParams) {
+            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) currentParams;
+            params.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+            params.setMargins(30, 0, 30, 0);
+            layout.setLayoutParams(params);
+        } else {
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+            params.setMargins(30, 0, 30, 0);
+            layout.setLayoutParams(params);
+        }
 
         View customView = LayoutInflater.from(context).inflate(R.layout.view_custom_snackbar, null);
         CardView cardView = customView.findViewById(R.id.snack_card_root);

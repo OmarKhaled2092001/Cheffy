@@ -11,14 +11,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.cheffy.R;
-import com.example.cheffy.data.meals.models.RemoteMeal;
+import com.example.cheffy.data.meals.models.remote.RemoteMeal;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MealsGridAdapter extends RecyclerView.Adapter<MealsGridAdapter.MealViewHolder> {
 
     private List<RemoteMeal> meals = new ArrayList<>();
+    private Set<String> favoriteIds = new HashSet<>();
     private final OnMealGridClickListener listener;
 
     public MealsGridAdapter(OnMealGridClickListener listener) {
@@ -28,6 +31,29 @@ public class MealsGridAdapter extends RecyclerView.Adapter<MealsGridAdapter.Meal
     public void setMeals(List<RemoteMeal> meals) {
         this.meals = meals != null ? meals : new ArrayList<>();
         notifyDataSetChanged();
+    }
+
+    public void setFavoriteIds(Set<String> favoriteIds) {
+        this.favoriteIds = favoriteIds != null ? favoriteIds : new HashSet<>();
+        notifyDataSetChanged();
+    }
+
+    public void updateFavoriteStatus(String mealId, boolean isFavorite) {
+        if (isFavorite) {
+            favoriteIds.add(mealId);
+        } else {
+            favoriteIds.remove(mealId);
+        }
+        for (int i = 0; i < meals.size(); i++) {
+            if (meals.get(i).getIdMeal().equals(mealId)) {
+                notifyItemChanged(i);
+                break;
+            }
+        }
+    }
+
+    public boolean isFavorite(String mealId) {
+        return favoriteIds.contains(mealId);
     }
 
     @NonNull
@@ -41,7 +67,8 @@ public class MealsGridAdapter extends RecyclerView.Adapter<MealsGridAdapter.Meal
     @Override
     public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
         RemoteMeal meal = meals.get(position);
-        holder.bind(meal);
+        boolean isFav = favoriteIds.contains(meal.getIdMeal());
+        holder.bind(meal, isFav);
     }
 
     @Override
@@ -54,16 +81,16 @@ public class MealsGridAdapter extends RecyclerView.Adapter<MealsGridAdapter.Meal
         private final ImageView ivMealImage;
         private final TextView tvMealName;
         private final TextView tvMealArea;
+        private final ImageView btnAddToFav;
 
         private RemoteMeal currentMeal;
-
-
 
         MealViewHolder(@NonNull View itemView, OnMealGridClickListener listener) {
             super(itemView);
             ivMealImage = itemView.findViewById(R.id.ivPopularMeal);
             tvMealName = itemView.findViewById(R.id.tvPopularMealName);
             tvMealArea = itemView.findViewById(R.id.tvPopularMealArea);
+            btnAddToFav = itemView.findViewById(R.id.btnAddToFav);
 
             itemView.setOnClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();
@@ -71,9 +98,16 @@ public class MealsGridAdapter extends RecyclerView.Adapter<MealsGridAdapter.Meal
                     listener.onMealClick(currentMeal);
                 }
             });
+
+            btnAddToFav.setOnClickListener(v -> {
+                int position = getAbsoluteAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && listener != null && currentMeal != null) {
+                    listener.onFavoriteClick(currentMeal);
+                }
+            });
         }
 
-        void bind(RemoteMeal meal) {
+        void bind(RemoteMeal meal, boolean isFavorite) {
             this.currentMeal = meal;
 
             tvMealName.setText(meal.getName());
@@ -85,6 +119,12 @@ public class MealsGridAdapter extends RecyclerView.Adapter<MealsGridAdapter.Meal
                 tvMealArea.setVisibility(View.GONE);
             }
 
+            if (isFavorite) {
+                btnAddToFav.setImageResource(R.drawable.ic_favorite_filled);
+            } else {
+                btnAddToFav.setImageResource(R.drawable.favorite);
+            }
+
             Glide.with(itemView.getContext())
                     .load(meal.getThumbnail())
                     .placeholder(R.drawable.welcome_background)
@@ -93,3 +133,4 @@ public class MealsGridAdapter extends RecyclerView.Adapter<MealsGridAdapter.Meal
         }
     }
 }
+

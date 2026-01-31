@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.cheffy.R;
 import com.example.cheffy.common.base.BaseFragment;
-import com.example.cheffy.data.meals.models.RemoteMeal;
+import com.example.cheffy.data.meals.models.remote.RemoteMeal;
 import com.example.cheffy.data.meals.repository.MealsRepositoryImpl;
 import com.example.cheffy.ui.mealdetails.model.IngredientItem;
 import com.example.cheffy.ui.mealdetails.presenter.MealDetailsContract;
@@ -49,7 +49,7 @@ public class MealDetailsFragment extends BaseFragment implements MealDetailsCont
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new MealDetailsPresenter(MealsRepositoryImpl.getInstance());
+        presenter = new MealDetailsPresenter(MealsRepositoryImpl.getInstance(requireContext()));
 
         if (getArguments() != null) {
             MealDetailsFragmentArgs args = MealDetailsFragmentArgs.fromBundle(getArguments());
@@ -174,5 +174,21 @@ public class MealDetailsFragment extends BaseFragment implements MealDetailsCont
     public void onDestroyView() {
         super.onDestroyView();
         presenter.detachView();
+    }
+
+    @Override
+    public void updateFavoriteIcon(boolean isFavorite) {
+        if (!isAdded() || btnAddToFav == null) return;
+        if (isFavorite) {
+            btnAddToFav.setImageResource(R.drawable.ic_favorite_filled);
+        } else {
+            btnAddToFav.setImageResource(R.drawable.favorite);
+        }
+    }
+
+    @Override
+    public void showRemovedFromFavoritesMessage() {
+        if (!isAdded()) return;
+        showSnackBarSuccess(getString(R.string.removed_from_favorites));
     }
 }

@@ -1,4 +1,4 @@
-package com.example.cheffy.data.meals.models;
+package com.example.cheffy.data.meals.models.remote;
 
 import com.google.gson.annotations.SerializedName;
 

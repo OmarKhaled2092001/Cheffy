@@ -1,7 +1,7 @@
 package com.example.cheffy.ui.mealdetails.presenter;
 
 import com.example.cheffy.common.base.BasePresenter;
-import com.example.cheffy.data.meals.models.RemoteMeal;
+import com.example.cheffy.data.meals.models.remote.RemoteMeal;
 import com.example.cheffy.data.meals.repository.IMealsRepository;
 import com.example.cheffy.ui.mealdetails.model.IngredientItem;
 
@@ -12,6 +12,8 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 public class MealDetailsPresenter extends BasePresenter<MealDetailsContract.View> implements MealDetailsContract.Presenter {
 
     private final IMealsRepository mealsRepository;
+    private RemoteMeal currentMeal;
+    private boolean isFavorite = false;
 
     public MealDetailsPresenter(IMealsRepository mealsRepository) {
         this.mealsRepository = mealsRepository;
@@ -36,11 +38,33 @@ public class MealDetailsPresenter extends BasePresenter<MealDetailsContract.View
             return;
         }
 
+        this.currentMeal = meal;
+
         if (isPartialMeal(meal)) {
             fetchFullMealDetails(meal.getIdMeal());
         } else {
             displayMealDetails(meal);
         }
+        
+        checkFavoriteStatus(meal.getIdMeal());
+    }
+
+    private void checkFavoriteStatus(String mealId) {
+        addDisposable(
+            mealsRepository.isFavorite(mealId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    isFav -> {
+                        this.isFavorite = isFav;
+                        if (isViewAttached()) {
+                            view.updateFavoriteIcon(isFav);
+                        }
+                    },
+                    throwable -> {
+                        this.isFavorite = false;
+                    }
+                )
+        );
     }
 
     private boolean isPartialMeal(RemoteMeal meal) {
@@ -56,6 +80,7 @@ public class MealDetailsPresenter extends BasePresenter<MealDetailsContract.View
                 .subscribe(
                     fullMeal -> {
                         if (isViewAttached()) {
+                            this.currentMeal = fullMeal;
                             displayMealDetails(fullMeal);
                         }
                     },
@@ -85,7 +110,46 @@ public class MealDetailsPresenter extends BasePresenter<MealDetailsContract.View
 
     @Override
     public void onAddToFavoritesClicked() {
-        if (!isViewAttached()) return;
-        view.showAddToFavoritesMessage();
+        if (!isViewAttached() || currentMeal == null) return;
+        
+        if (isFavorite) {
+            addDisposable(
+                mealsRepository.removeFavorite(currentMeal)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                        () -> {
+                            isFavorite = false;
+                            if (isViewAttached()) {
+                                view.updateFavoriteIcon(false);
+                                view.showRemovedFromFavoritesMessage();
+                            }
+                        },
+                        throwable -> {
+                            if (isViewAttached()) {
+                                view.showError("Failed to remove from favorites");
+                            }
+                        }
+                    )
+            );
+        } else {
+            addDisposable(
+                mealsRepository.addFavorite(currentMeal)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                        () -> {
+                            isFavorite = true;
+                            if (isViewAttached()) {
+                                view.updateFavoriteIcon(true);
+                                view.showAddToFavoritesMessage();
+                            }
+                        },
+                        throwable -> {
+                            if (isViewAttached()) {
+                                view.showError("Failed to add to favorites");
+                            }
+                        }
+                    )
+            );
+        }
     }
 }
