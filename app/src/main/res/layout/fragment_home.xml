@@ -12,14 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:paddingBottom="100dp"
         android:clipToPadding="false"
         android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="100dp">
+        android:layout_height="wrap_content">
 
         <View
             android:id="@+id/viewHeaderBackground"
@@ -85,56 +83,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/viewHeaderBackground" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardPlanMeal"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPlannedMeals"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:layout_marginHorizontal="24dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:visibility="gone"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
+            android:orientation="horizontal"
+            android:clipToPadding="false"
+            android:paddingHorizontal="24dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:visibility="visible"
-            app:layout_constraintTop_toBottomOf="@id/tvPlanTitle">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/imgPlanMeal"
-                    android:layout_width="120dp"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@string/background_image_for_today_s_meal"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/welcome_background"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-                <TextView
-                    android:id="@+id/tvPlanMealName"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:text=""
-                    tools:text="Grilled Chicken Salad"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/imgPlanMeal"
-                    app:layout_constraintTop_toTopOf="parent" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/check_your_plan"
-                    android:textColor="@color/primary_color"
-                    android:textSize="12sp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintStart_toStartOf="@id/tvPlanMealName"
-                    app:layout_constraintTop_toBottomOf="@id/tvPlanMealName"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
+            tools:listitem="@layout/item_home_plan"
+            app:layout_constraintTop_toBottomOf="@id/tvPlanTitle"/>
 
         <TextView
             android:id="@+id/tvDailyInspiration"
@@ -149,7 +110,7 @@
             android:textStyle="bold"
             app:layout_goneMarginTop="32dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardPlanMeal" />
+            app:layout_constraintTop_toBottomOf="@id/rvPlannedMeals" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardMealOfTheDay"

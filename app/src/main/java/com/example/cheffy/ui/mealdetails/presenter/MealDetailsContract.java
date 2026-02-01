@@ -15,6 +15,8 @@ public interface MealDetailsContract {
         void showRemovedFromFavoritesMessage();
         void updateFavoriteIcon(boolean isFavorite);
         void showError(String message);
+        void showAddedToPlanMessage(String dayOfWeek);
+        void showDayPicker();
     }
 
     interface Presenter {
@@ -22,5 +24,7 @@ public interface MealDetailsContract {
         void detachView();
         void loadMealDetails(RemoteMeal meal);
         void onAddToFavoritesClicked();
+        void onAddToPlanClicked();
+        void addMealToPlan(String dayOfWeek);
     }
 }

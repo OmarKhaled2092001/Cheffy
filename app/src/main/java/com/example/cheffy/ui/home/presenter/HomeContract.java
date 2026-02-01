@@ -5,6 +5,7 @@ import com.example.cheffy.data.meals.models.remote.Category;
 import com.example.cheffy.data.meals.models.remote.Ingredient;
 import com.example.cheffy.data.meals.models.remote.RemoteMeal;
 import com.example.cheffy.data.meals.models.SearchType;
+import com.example.cheffy.ui.plan.model.PlannedMeal;
 import com.example.cheffy.ui.search.SearchFilterType;
 
 import java.util.List;
@@ -20,6 +21,8 @@ public interface HomeContract {
         void showPopularMeals(List<RemoteMeal> meals);
         void showCuisines(List<Area> areas);
         void showIngredients(List<Ingredient> ingredients);
+        void showPlannedMeal(List<PlannedMeal> meals);
+        void hidePlannedMeal();
         void showError(String message);
         void navigateToMealDetails(RemoteMeal meal);
         void navigateToMealsList(String filter, SearchType type);

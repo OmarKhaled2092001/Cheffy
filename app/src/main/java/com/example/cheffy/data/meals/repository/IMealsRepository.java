@@ -5,6 +5,7 @@ import com.example.cheffy.data.meals.models.remote.Category;
 import com.example.cheffy.data.meals.models.remote.Ingredient;
 import com.example.cheffy.data.meals.models.remote.RemoteMeal;
 import com.example.cheffy.data.meals.models.SearchType;
+import com.example.cheffy.ui.plan.model.PlannedMeal;
 
 import java.util.List;
 
@@ -38,4 +39,18 @@ public interface IMealsRepository {
     Completable removeFavorite(RemoteMeal meal);
 
     Single<Boolean> isFavorite(String mealId);
+
+    Flowable<List<PlannedMeal>> observeMealPlanByDay(String dayOfWeek);
+
+    Completable addMealToPlan(RemoteMeal meal, String dayOfWeek);
+
+    Completable removeMealFromPlanWithSync(String mealId, String dayOfWeek, long planId);
+
+    Completable restoreDataFromCloud();
+
+    Completable backupLocalDataToCloud();
+
+    Single<Boolean> hasCloudData();
+
+    Completable clearAllLocalData();
 }

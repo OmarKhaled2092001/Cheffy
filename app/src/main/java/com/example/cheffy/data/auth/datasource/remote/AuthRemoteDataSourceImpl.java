@@ -122,6 +122,14 @@ public class AuthRemoteDataSourceImpl implements IAuthRemoteDataSource {
 
     private User mapFirebaseUserToUser(FirebaseUser firebaseUser) {
         if (firebaseUser == null) return null;
-        return new User(firebaseUser.getDisplayName(), firebaseUser.getEmail());
+        String photoUrl = firebaseUser.getPhotoUrl() != null 
+                ? firebaseUser.getPhotoUrl().toString() 
+                : null;
+        return new User(firebaseUser.getDisplayName(), firebaseUser.getEmail(), photoUrl);
+    }
+
+    @Override
+    public void signOut() {
+        firebaseAuth.signOut();
     }
 }

@@ -56,4 +56,9 @@ public class AuthRepositoryImpl implements IAuthRepository {
     public User getCurrentUser() {
         return remoteDataSource.getCurrentUser();
     }
+
+    @Override
+    public void signOut() {
+        remoteDataSource.signOut();
+    }
 }

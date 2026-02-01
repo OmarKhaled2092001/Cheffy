@@ -8,7 +8,9 @@ import com.example.cheffy.data.meals.models.remote.Ingredient;
 import com.example.cheffy.data.meals.models.SearchType;
 import com.example.cheffy.data.meals.models.remote.RemoteMeal;
 import com.example.cheffy.data.meals.repository.IMealsRepository;
+import com.example.cheffy.ui.plan.model.PlannedMeal;
 
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +22,7 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
 
     private final IMealsRepository homeRepository;
     private final IAuthRepository authRepository;
-    private Set<String> favoriteIds = new HashSet<>();
+    private final Set<String> favoriteIds = new HashSet<>();
 
     private static final int POPULAR_MEALS_COUNT = 10;
 
@@ -47,6 +49,8 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
         loadFavoriteIds();
         view.showLoading();
 
+        String dayOfWeek = getTodayDayName();
+
         addDisposable(
             Single.zip(
                 homeRepository.getRandomMeal(),
@@ -54,6 +58,7 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
                 homeRepository.getPopularMeals(POPULAR_MEALS_COUNT),
                 homeRepository.getAreas(),
                 homeRepository.getIngredients(),
+                homeRepository.observeMealPlanByDay(dayOfWeek).firstOrError(),
                 HomeDataBundle::new
             )
             .observeOn(AndroidSchedulers.mainThread())
@@ -66,6 +71,12 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
                         view.showPopularMeals(bundle.popularMeals);
                         view.showCuisines(bundle.areas);
                         view.showIngredients(bundle.ingredients);
+
+                        if (bundle.plannedMeals != null && !bundle.plannedMeals.isEmpty()) {
+                            view.showPlannedMeal(bundle.plannedMeals);
+                        } else {
+                            view.hidePlannedMeal();
+                        }
                     }
                 },
                 throwable -> {
@@ -162,7 +173,6 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
         boolean isFavorite = favoriteIds.contains(mealId);
         
         if (isFavorite) {
-            // Remove from favorites
             addDisposable(
                 homeRepository.removeFavorite(meal)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -181,7 +191,6 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
                     )
             );
         } else {
-            // Add to favorites
             addDisposable(
                 homeRepository.addFavorite(meal)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -202,23 +211,40 @@ public class HomePresenter extends BasePresenter<HomeContract.View> implements H
         }
     }
 
+    private String getTodayDayName() {
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(java.util.Calendar.DAY_OF_WEEK);
+        switch (day) {
+            case Calendar.SUNDAY: return "Sunday";
+            case Calendar.MONDAY: return "Monday";
+            case Calendar.TUESDAY: return "Tuesday";
+            case Calendar.WEDNESDAY: return "Wednesday";
+            case Calendar.THURSDAY: return "Thursday";
+            case Calendar.FRIDAY: return "Friday";
+            default: return "Saturday";
+        }
+    }
+
     private static class HomeDataBundle {
         final RemoteMeal mealOfTheDay;
         final List<Category> categories;
         final List<RemoteMeal> popularMeals;
         final List<Area> areas;
         final List<Ingredient> ingredients;
+        final List<PlannedMeal> plannedMeals;
 
         HomeDataBundle(RemoteMeal mealOfTheDay, 
                        List<Category> categories,
                        List<RemoteMeal> popularMeals, 
                        List<Area> areas,
-                       List<Ingredient> ingredients) {
+                       List<Ingredient> ingredients,
+                       List<PlannedMeal> plannedMeals) {
             this.mealOfTheDay = mealOfTheDay;
             this.categories = categories;
             this.popularMeals = popularMeals;
             this.areas = areas;
             this.ingredients = ingredients;
+            this.plannedMeals = plannedMeals;
         }
     }
 }

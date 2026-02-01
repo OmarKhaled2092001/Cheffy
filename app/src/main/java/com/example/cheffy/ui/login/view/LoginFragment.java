@@ -17,6 +17,7 @@ import com.example.cheffy.R;
 import com.example.cheffy.data.auth.repository.AuthRepositoryImpl;
 import com.example.cheffy.data.auth.social.GoogleAuthHelper;
 import com.example.cheffy.data.auth.social.SocialAuthCallback;
+import com.example.cheffy.data.meals.repository.MealsRepositoryImpl;
 import com.example.cheffy.common.base.BaseFragment;
 import com.example.cheffy.ui.login.presenter.LoginContract;
 import com.example.cheffy.ui.login.presenter.LoginPresenter;
@@ -56,7 +57,10 @@ public class LoginFragment extends BaseFragment implements LoginContract.View {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        presenter = new LoginPresenter(AuthRepositoryImpl.getInstance());
+        presenter = new LoginPresenter(
+                AuthRepositoryImpl.getInstance(),
+                MealsRepositoryImpl.getInstance(requireContext())
+        );
         googleAuthHelper = new GoogleAuthHelper(requireContext(), socialAuthCallback);
     }
 

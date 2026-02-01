@@ -26,8 +26,9 @@ import com.example.cheffy.data.meals.models.remote.RemoteMeal;
 import com.example.cheffy.data.meals.models.SearchType;
 import com.example.cheffy.data.meals.repository.MealsRepositoryImpl;
 import com.example.cheffy.ui.home.presenter.HomeContract;
-import com.example.cheffy.ui.search.SearchFilterType;
 import com.example.cheffy.ui.home.presenter.HomePresenter;
+import com.example.cheffy.ui.plan.model.PlannedMeal;
+import com.example.cheffy.ui.search.SearchFilterType;
 import com.example.cheffy.ui.home.view.adapters.CategoriesAdapter;
 import com.example.cheffy.ui.home.view.adapters.CuisinesAdapter;
 import com.example.cheffy.ui.home.view.adapters.IngredientsAdapter;
@@ -58,9 +59,13 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,
     private PopularMealsAdapter popularMealsAdapter;
     private CuisinesAdapter cuisinesAdapter;
     private IngredientsAdapter ingredientsAdapter;
+    private com.example.cheffy.ui.home.view.adapters.HomePlanAdapter homePlanAdapter;
 
     private RemoteMeal mealOfTheDay;
     private HomeContract.Presenter presenter;
+
+    private TextView tvPlanTitle;
+    private RecyclerView rvPlannedMeals;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,6 +114,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,
         tvSeeAllCategories = view.findViewById(R.id.tvSeeAllCategories);
         tvSeeAllCuisines = view.findViewById(R.id.tvSeeAllCuisines);
         tvSeeAllIngredients = view.findViewById(R.id.tvSeeAllIngredients);
+        
+        tvPlanTitle = view.findViewById(R.id.tvPlanTitle);
+        rvPlannedMeals = view.findViewById(R.id.rvPlannedMeals);
     }
 
     private void initAdapters() {
@@ -123,6 +131,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,
 
         ingredientsAdapter = new IngredientsAdapter(this);
         rvIngredients.setAdapter(ingredientsAdapter);
+
+        homePlanAdapter = new com.example.cheffy.ui.home.view.adapters.HomePlanAdapter(this);
+        rvPlannedMeals.setAdapter(homePlanAdapter);
     }
 
     private void setupClickListeners() {
@@ -170,6 +181,24 @@ public class HomeFragment extends BaseFragment implements HomeContract.View,
                 .centerCrop()
                 .placeholder(R.drawable.welcome_background)
                 .into(imgMealOfTheDay);
+    }
+
+    @Override
+    public void showPlannedMeal(List<PlannedMeal> meals) {
+        if (!isAdded() || getView() == null || meals == null || meals.isEmpty()) return;
+
+        if (tvPlanTitle != null) tvPlanTitle.setVisibility(View.VISIBLE);
+        if (rvPlannedMeals != null) {
+            rvPlannedMeals.setVisibility(View.VISIBLE);
+            homePlanAdapter.setMeals(meals);
+        }
+    }
+
+    @Override
+    public void hidePlannedMeal() {
+        if (!isAdded() || getView() == null) return;
+        if (tvPlanTitle != null) tvPlanTitle.setVisibility(View.GONE);
+        if (rvPlannedMeals != null) rvPlannedMeals.setVisibility(View.GONE);
     }
 
     @Override

@@ -17,4 +17,6 @@ public interface IAuthRemoteDataSource {
     boolean isUserLoggedIn();
 
     User getCurrentUser();
+
+    void signOut();
 }
