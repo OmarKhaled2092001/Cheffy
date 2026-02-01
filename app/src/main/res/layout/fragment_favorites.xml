@@ -113,7 +113,6 @@
         android:layout_marginTop="12dp"
         android:clipToPadding="false"
         android:paddingHorizontal="16dp"
-        android:paddingBottom="100dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -136,7 +135,7 @@
             android:id="@+id/ivEmptyState"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:src="@drawable/no_network"
+            android:src="@drawable/no_favorite"
             android:contentDescription="@string/no_favorites_yet" />
 
         <TextView

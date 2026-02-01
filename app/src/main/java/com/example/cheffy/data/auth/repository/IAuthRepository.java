@@ -17,4 +17,6 @@ public interface IAuthRepository {
     boolean isUserLoggedIn();
     
     User getCurrentUser();
+    
+    void signOut();
 }

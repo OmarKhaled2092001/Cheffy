@@ -167,4 +167,28 @@
             android:id="@+id/action_nav_favorites_to_mealDetailsFragment"
             app:destination="@id/mealDetailsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/nav_plan"
+        android:name="com.example.cheffy.ui.plan.view.PlanFragment"
+        android:label="fragment_plan"
+        tools:layout="@layout/fragment_plan">
+        <action
+            android:id="@+id/action_nav_plan_to_mealDetailsFragment"
+            app:destination="@id/mealDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.cheffy.ui.home.view.HomeFragment"
+        android:label="HomeFragment" />
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.example.cheffy.ui.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_logout_to_welcome"
+            app:destination="@id/welcomeFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

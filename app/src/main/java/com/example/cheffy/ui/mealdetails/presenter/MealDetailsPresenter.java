@@ -152,4 +152,33 @@ public class MealDetailsPresenter extends BasePresenter<MealDetailsContract.View
             );
         }
     }
+
+    @Override
+    public void onAddToPlanClicked() {
+        if (!isViewAttached() || currentMeal == null) return;
+        view.showDayPicker();
+    }
+
+    @Override
+    public void addMealToPlan(String dayOfWeek) {
+        if (!isViewAttached() || currentMeal == null) return;
+
+        addDisposable(
+            mealsRepository.addMealToPlan(currentMeal, dayOfWeek)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    () -> {
+                        if (isViewAttached()) {
+                            view.showAddedToPlanMessage(dayOfWeek);
+                        }
+                    },
+                    throwable -> {
+                        if (isViewAttached()) {
+                            view.showError("Failed to add to plan");
+                        }
+                    }
+                )
+        );
+    }
 }
+

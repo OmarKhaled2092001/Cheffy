@@ -166,8 +166,25 @@ public class MealDetailsFragment extends BaseFragment implements MealDetailsCont
 
     @Override
     public void onAddToPlanClicked() {
-        if (!isAdded() || getContext() == null) return;
-        Toast.makeText(getContext(), "Add to Plan - Coming Soon", Toast.LENGTH_SHORT).show();
+        presenter.onAddToPlanClicked();
+    }
+
+    @Override
+    public void showDayPicker() {
+        if (!isAdded()) return;
+        DayPickerBottomSheet bottomSheet = DayPickerBottomSheet.newInstance();
+        bottomSheet.setOnDaySelectedListener(this::onDaySelected);
+        bottomSheet.show(getChildFragmentManager(), "DayPicker");
+    }
+
+    private void onDaySelected(String dayOfWeek) {
+        presenter.addMealToPlan(dayOfWeek);
+    }
+
+    @Override
+    public void showAddedToPlanMessage(String dayOfWeek) {
+        if (!isAdded()) return;
+        showSnackBarSuccess(getString(R.string.meal_added_to_plan, dayOfWeek));
     }
 
     @Override

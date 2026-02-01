@@ -6,12 +6,11 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fillViewport="true"
-    tools:context=".ui.ProfileFragment">
+    tools:context=".ui.profile.ProfileFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="100dp">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tvProfileTitle"
@@ -34,7 +33,7 @@
             android:layout_marginTop="24dp"
             android:padding="2dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/welcome_background"
+            android:src="@drawable/ic_default_avatar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvProfileTitle"
@@ -136,12 +135,12 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tvHeaderSync"
+            android:id="@+id/tvHeaderSettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="32dp"
-            android:text="@string/data_sync"
+            android:text="@string/settings"
             android:textColor="@color/text_gray"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -149,7 +148,7 @@
             app:layout_constraintTop_toBottomOf="@id/layoutFav" />
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardBackup"
+            android:id="@+id/cardSettings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
@@ -157,7 +156,7 @@
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="16dp"
             app:cardElevation="2dp"
-            app:layout_constraintTop_toBottomOf="@id/tvHeaderSync">
+            app:layout_constraintTop_toBottomOf="@id/tvHeaderSettings">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -165,7 +164,7 @@
                 android:orientation="vertical">
 
                 <include
-                    android:id="@+id/optionBackup"
+                    android:id="@+id/optionTheme"
                     layout="@layout/item_profile_option" />
 
                 <View
@@ -175,7 +174,7 @@
                     android:background="@color/light_gray" />
 
                 <include
-                    android:id="@+id/optionRestore"
+                    android:id="@+id/optionLanguage"
                     layout="@layout/item_profile_option" />
 
             </LinearLayout>
@@ -192,7 +191,7 @@
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cardBackup" />
+            app:layout_constraintTop_toBottomOf="@id/cardSettings" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardGeneral"
